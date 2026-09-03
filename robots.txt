@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://chavali-uddipa-dattudu.github.io/sitemap.xml
