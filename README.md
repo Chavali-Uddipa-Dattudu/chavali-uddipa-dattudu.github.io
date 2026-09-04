@@ -259,4 +259,3 @@ The website source code may be used as a reference, but personal photographs, ce
 
 ---
 
-**Portfolio updated:** 04 September 2026
