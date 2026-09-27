@@ -363,15 +363,9 @@ section[id] {
   margin-top: 11px;
   border-radius: 999px;
   background:
-    linear-gradient(90deg, var(--accent), var(--accent)) 0 50% / 100% 2px
-      no-repeat,
-    radial-gradient(
-        circle,
-        var(--surface) 0 1.4px,
-        var(--accent) 1.8px 3px,
-        transparent 3.6px
-      ) -10px
-      50% / 8px 8px no-repeat;
+    linear-gradient(90deg, var(--accent), var(--accent)) 0 50% / 100% 2px no-repeat,
+    radial-gradient(circle, var(--surface) 0 1.4px, var(--accent) 1.8px 3px, transparent 3.6px)
+      -10px 50% / 8px 8px no-repeat;
   transition: width 0.35s ease;
 }
 .reveal-visible .heading-animated::after {
@@ -380,14 +374,10 @@ section[id] {
 }
 @keyframes headingSignalTrace {
   from {
-    background-position:
-      0 50%,
-      -10px 50%;
+    background-position: 0 50%, -10px 50%;
   }
   to {
-    background-position:
-      0 50%,
-      76px 50%;
+    background-position: 0 50%, 76px 50%;
   }
 }
 
@@ -3671,6 +3661,7 @@ section.signal-hit::after {
   animation-delay: 240ms;
 }
 
+
 /* Technical Focus matrix */
 .technical-focus {
   margin-top: 22px;
@@ -3901,13 +3892,16 @@ html[data-theme="dark"] .theme-symbols .theme-moon {
   width: 5px;
   height: 34px;
   border-radius: 999px;
-  background: linear-gradient(180deg, transparent, var(--accent), transparent);
+  background: linear-gradient(
+    180deg,
+    transparent,
+    var(--accent),
+    transparent
+  );
   opacity: 0;
   pointer-events: none;
   z-index: 3;
-  filter: drop-shadow(
-    0 0 8px color-mix(in srgb, var(--accent) 42%, transparent)
-  );
+  filter: drop-shadow(0 0 8px color-mix(in srgb, var(--accent) 42%, transparent));
 }
 .experience-timeline.signal-running::after {
   animation: experienceSignal 4.6s linear 1;
@@ -4125,6 +4119,7 @@ html[data-theme="dark"] .is-pressed {
   color: var(--text);
 }
 
+
 /* Current SAR evidence image */
 .research-project-visual img {
   position: absolute;
@@ -4134,10 +4129,7 @@ html[data-theme="dark"] .is-pressed {
   object-fit: cover;
   object-position: center;
   opacity: 0.86;
-  transition:
-    opacity 0.25s ease,
-    transform 0.35s ease,
-    filter 0.25s ease;
+  transition: opacity 0.25s ease, transform 0.35s ease, filter 0.25s ease;
 }
 .research-project-visual:hover img {
   opacity: 0.98;
@@ -4364,12 +4356,10 @@ body::before {
       color-mix(in srgb, var(--accent) 8%, transparent) 1px,
       transparent 1px
     );
-  background-size:
-    auto,
-    40px 40px,
-    40px 40px;
+  background-size: auto, 40px 40px, 40px 40px;
   background-position: center, center, center;
 }
+
 
 /* ---------------------------------------------------------
    Click-to-ripple RF / pond-wave field
@@ -4410,6 +4400,8 @@ footer {
   -webkit-backdrop-filter: blur(8px);
   background: color-mix(in srgb, var(--surface) 95%, transparent);
 }
+
+
 
 .rf-wave-canvas {
   mix-blend-mode: multiply;
