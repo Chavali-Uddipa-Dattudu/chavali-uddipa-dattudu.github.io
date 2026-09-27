@@ -68,35 +68,46 @@
 </script>
 <meta content="Chavali Uddipa Dattudu — VLSI, RFIC and Analog IC Design Portfolio" property="og:image:alt"/></head>
 <body class="is-booting">
+<canvas id="rfWaveCanvas" class="rf-wave-canvas" aria-hidden="true"></canvas>
 <a class="skip-link" href="#main">
    Skip to content
   </a>
 <div aria-hidden="true" class="site-loader" id="siteLoader">
-<div class="loader-core">
-<div class="loader-chip">
-<span class="loader-pulse"></span>
-<span>CUD</span>
-</div>
-<p>Powering up the portfolio</p>
-<div aria-hidden="true" class="loader-signal">
-<svg viewBox="0 0 720 120" preserveAspectRatio="none">
-<path class="loader-signal-grid" d="M0 60H720 M180 18V102 M360 18V102 M540 18V102"></path>
-<path class="loader-signal-axis" d="M0 60H720"></path>
-<path class="loader-signal-wave" d="M 0.0,60.0 L 4.0,59.4 L 8.0,58.7 L 12.0,58.0 L 16.0,57.3 L 20.0,56.6 L 24.0,55.9 L 28.0,55.3 L 32.0,54.6 L 36.0,54.0 L 40.0,53.5 L 44.0,53.0 L 48.0,52.5 L 52.0,52.2 L 56.0,51.9 L 60.0,51.7 L 64.0,51.6 L 68.0,51.5 L 72.0,51.6 L 76.0,51.8 L 80.0,52.1 L 84.0,52.5 L 88.0,53.0 L 92.0,53.6 L 96.0,54.3 L 100.0,55.1 L 104.0,55.9 L 108.0,56.8 L 112.0,57.8 L 116.0,58.9 L 120.0,60.0 L 124.0,61.1 L 128.0,62.3 L 132.0,63.4 L 136.0,64.6 L 140.0,65.7 L 144.0,66.8 L 148.0,67.9 L 152.0,68.9 L 156.0,69.8 L 160.0,70.6 L 164.0,71.3 L 168.0,71.9 L 172.0,72.4 L 176.0,72.8 L 180.0,73.0 L 184.0,73.1 L 188.0,73.0 L 192.0,72.8 L 196.0,72.4 L 200.0,71.9 L 204.0,71.3 L 208.0,70.5 L 212.0,69.5 L 216.0,68.5 L 220.0,67.3 L 224.0,66.0 L 228.0,64.6 L 232.0,63.1 L 236.0,61.6 L 240.0,60.0 L 244.0,58.4 L 248.0,56.7 L 252.0,55.1 L 256.0,53.5 L 260.0,51.9 L 264.0,50.4 L 268.0,49.0 L 272.0,47.7 L 276.0,46.5 L 280.0,45.4 L 284.0,44.4 L 288.0,43.6 L 292.0,43.0 L 296.0,42.6 L 300.0,42.3 L 304.0,42.3 L 308.0,42.4 L 312.0,42.8 L 316.0,43.3 L 320.0,44.0 L 324.0,45.0 L 328.0,46.1 L 332.0,47.3 L 336.0,48.8 L 340.0,50.4 L 344.0,52.1 L 348.0,54.0 L 352.0,55.9 L 356.0,57.9 L 360.0,60.0 L 364.0,62.1 L 368.0,64.2 L 372.0,66.3 L 376.0,68.4 L 380.0,70.4 L 384.0,72.3 L 388.0,74.1 L 392.0,75.8 L 396.0,77.3 L 400.0,78.7 L 404.0,79.8 L 408.0,80.8 L 412.0,81.5 L 416.0,82.1 L 420.0,82.3 L 424.0,82.4 L 428.0,82.1 L 432.0,81.7 L 436.0,81.0 L 440.0,80.0 L 444.0,78.8 L 448.0,77.4 L 452.0,75.8 L 456.0,74.0 L 460.0,71.9 L 464.0,69.8 L 468.0,67.5 L 472.0,65.1 L 476.0,62.6 L 480.0,60.0 L 484.0,57.4 L 488.0,54.8 L 492.0,52.2 L 496.0,49.7 L 500.0,47.3 L 504.0,45.0 L 508.0,42.8 L 512.0,40.7 L 516.0,38.9 L 520.0,37.3 L 524.0,35.9 L 528.0,34.8 L 532.0,33.9 L 536.0,33.3 L 540.0,33.0 L 544.0,33.0 L 548.0,33.3 L 552.0,33.9 L 556.0,34.8 L 560.0,35.9 L 564.0,37.4 L 568.0,39.1 L 572.0,41.1 L 576.0,43.3 L 580.0,45.7 L 584.0,48.3 L 588.0,51.1 L 592.0,54.0 L 596.0,57.0 L 600.0,60.0 L 604.0,63.1 L 608.0,66.2 L 612.0,69.2 L 616.0,72.2 L 620.0,75.1 L 624.0,77.8 L 628.0,80.4 L 632.0,82.7 L 636.0,84.9 L 640.0,86.8 L 644.0,88.4 L 648.0,89.7 L 652.0,90.7 L 656.0,91.3 L 660.0,91.7 L 664.0,91.6 L 668.0,91.3 L 672.0,90.6 L 676.0,89.5 L 680.0,88.1 L 684.0,86.4 L 688.0,84.3 L 692.0,82.0 L 696.0,79.4 L 700.0,76.6 L 704.0,73.6 L 708.0,70.4 L 712.0,67.0 L 716.0,63.5 L 720.0,60.0"></path>
-</svg>
-</div>
-<small>VLSI · RFIC · Analog IC Design</small>
-</div>
+  <div class="loader-core">
+    <div aria-hidden="true" class="loader-signal">
+      <svg preserveAspectRatio="none" viewBox="0 0 720 120" aria-hidden="true">
+        <defs>
+          <linearGradient id="loaderGold" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#b98828"/>
+            <stop offset="48%" stop-color="#d3a343"/>
+            <stop offset="100%" stop-color="#f0c66e"/>
+          </linearGradient>
+          <filter id="loaderGlow" x="-20%" y="-40%" width="140%" height="180%">
+            <feGaussianBlur stdDeviation="3.5" result="blur"/>
+            <feMerge>
+              <feMergeNode in="blur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+        <path class="loader-grid-line" d="M0 60H720"/>
+        <path class="loader-grid-axis" d="M0 30H720M0 90H720"/>
+        <path class="loader-signal-echo" id="loaderSignalEcho"/>
+        <path class="loader-signal-wave" id="loaderSignalPath"/>
+        <circle class="loader-signal-tip" cx="720" cy="60" r="5"/>
+        <circle class="loader-signal-ring" cx="720" cy="60" r="10"/>
+      </svg>
+    </div>
+    <p class="loader-label">Loading...</p>
+  </div>
 </div>
 <div aria-hidden="true" class="site-guide-overlay" hidden="" id="siteGuide">
 <section aria-labelledby="siteGuideTitle" aria-modal="true" class="site-guide" role="dialog">
-<svg aria-hidden="true" class="guide-signal guide-signal-top" viewBox="0 0 620 70" preserveAspectRatio="none"><path d="M0 35 C26 35 37 10 62 10 S98 60 124 60 S160 10 186 10 S222 60 248 60 S284 10 310 10 S346 60 372 60 S408 10 434 10 S470 60 496 60 S532 10 558 10 S594 35 620 35"></path></svg>
-<svg aria-hidden="true" class="guide-signal guide-signal-bottom" viewBox="0 0 620 70" preserveAspectRatio="none"><path d="M0 35 C26 35 37 10 62 10 S98 60 124 60 S160 10 186 10 S222 60 248 60 S284 10 310 10 S346 60 372 60 S408 10 434 10 S470 60 496 60 S532 10 558 10 S594 35 620 35"></path></svg>
-
+<svg aria-hidden="true" class="guide-signal guide-signal-top" preserveaspectratio="none" viewbox="0 0 620 70"><path d="M0 35 C26 35 37 10 62 10 S98 60 124 60 S160 10 186 10 S222 60 248 60 S284 10 310 10 S346 60 372 60 S408 10 434 10 S470 60 496 60 S532 10 558 10 S594 35 620 35"></path></svg>
+<svg aria-hidden="true" class="guide-signal guide-signal-bottom" preserveaspectratio="none" viewbox="0 0 620 70"><path d="M0 35 C26 35 37 10 62 10 S98 60 124 60 S160 10 186 10 S222 60 248 60 S284 10 310 10 S346 60 372 60 S408 10 434 10 S470 60 496 60 S532 10 558 10 S594 35 620 35"></path></svg>
 <button aria-label="Close portfolio guide" class="guide-close" id="guideClose" type="button">×</button>
 <p class="eyebrow">QUICK TOUR</p>
 <h2 id="siteGuideTitle">Explore the portfolio in a few steps.</h2>
-
 <div class="guide-steps">
 <div class="guide-step"><span>01</span><div><strong>About</strong><small>Profile, technical focus and research interests.</small></div></div><div class="guide-step"><span>02</span><div><strong>Experience</strong><small>NIT Calicut research and industrial training.</small></div></div><div class="guide-step"><span>03</span><div><strong>Projects</strong><small>Schematics, simulation results and repositories.</small></div></div><div class="guide-step"><span>04</span><div><strong>Education</strong><small>Diploma → B.Tech through lateral entry.</small></div></div><div class="guide-step"><span>05</span><div><strong>Achievements + Credentials</strong><small>Recognition, certificates and technical learning.</small></div></div><div class="guide-step"><span>06</span><div><strong>Contact</strong><small>Internships, research and technical collaboration.</small></div></div>
 </div>
@@ -117,8 +128,8 @@
 <button aria-controls="primary-nav" aria-expanded="false" aria-label="Open menu" class="menu-toggle">
      ☰
     </button>
-<nav aria-label="Primary navigation" class="nav-menu" id="primary-nav"><a class="active" href="#home">Home</a><a href="#about">About</a><a href="#experience">Experience</a><a href="#projects">Projects</a><a href="#education">Education</a><a href="#achievements">Achievements</a><a href="#credentials">Credentials</a><a href="#contact">Contact</a></nav>
-<button aria-label="Invert to dark theme" class="theme-toggle" id="themeToggle" title="Use the NOT gate to invert the website theme" type="button">
+<nav aria-label="Primary navigation" class="nav-menu" id="primary-nav"><div class="mobile-nav-head"><span>Navigate</span><span aria-hidden="true">CUD / 09</span></div><a class="active" href="#home">Home</a><a href="#about">About</a><a href="#experience">Experience</a><a href="#projects">Projects</a><a href="#education">Education</a><a href="#achievements">Achievements</a><a href="#credentials">Credentials</a><a href="#contact">Contact</a></nav>
+<button aria-label="Switch to dark theme" class="theme-toggle" id="themeToggle" title="Switch light and dark theme" type="button">
 <svg aria-hidden="true" class="not-gate-icon" viewbox="0 0 36 24">
 <path class="not-gate-line" d="M2 12H9"></path>
 <path class="not-gate-body" d="M9 3L24 12L9 21Z"></path>
@@ -126,8 +137,12 @@
 <path class="not-gate-line" d="M29.7 12H34"></path>
 <circle class="not-gate-pulse" cx="2" cy="12" r="1.8"></circle>
 </svg>
-<span class="sr-only" id="themeToggleText">Invert to dark theme</span>
-<span aria-hidden="true" class="theme-inv-label">INV</span></button>
+<span class="sr-only" id="themeToggleText">Switch to dark theme</span>
+<span aria-hidden="true" class="theme-symbols">
+  <span class="theme-moon" id="themeMoon">☾</span>
+  <span class="theme-sun" id="themeSun">☀</span>
+</span>
+</button>
 </div>
 </header>
 <div aria-hidden="true" id="scrollProgress">
@@ -278,26 +293,7 @@
         I am particularly interested in semiconductor design where device physics, circuit architecture and simulation discipline meet.
        </p>
 <div class="about-facts">
-<div aria-label="Research direction selector" class="about-selector reveal">
-<div class="selector-copy">
-<span class="eyebrow">Focus Selector</span>
-<h3>Rotate through my engineering interests</h3>
-<p id="aboutSelectorDescription">RF CMOS front-ends, low-noise amplification and RFIC design.</p>
-</div>
-<div class="selector-dial-wrap">
-<div aria-hidden="true" class="selector-dial" id="aboutSelectorDial">
-<span class="selector-indicator"></span>
-<span class="selector-core">FOCUS</span>
-</div>
-<div aria-label="Engineering focus" class="selector-options" role="group">
-<button class="selector-option active" data-description="RF CMOS front-ends, low-noise amplification and RFIC design." data-focus="RFIC / RF CMOS" type="button">RFIC</button>
-<button class="selector-option" data-description="Transistor-level analog building blocks, gain, noise and power trade-offs." data-focus="Analog CMOS" type="button">ANALOG</button>
-<button class="selector-option" data-description="Programmable gain amplifiers and data-conversion blocks for CMOS image sensors." data-focus="Image Sensors" type="button">SENSORS</button>
-<button class="selector-option" data-description="Interfaces between analog front-ends and digital processing in integrated systems." data-focus="Mixed-Signal ICs" type="button">MIXED</button>
-<button class="selector-option" data-description="Python-driven simulation workflows, data extraction and reproducible characterization." data-focus="EDA Automation" type="button">EDA</button>
-</div>
-</div>
-</div><div class="technical-profile reveal spotlight-card">
+<div class="technical-profile reveal spotlight-card">
 <h3>
           Technical profile
          </h3>
@@ -335,80 +331,29 @@
 </div>
 </div>
 </div>
+<div class="technical-focus reveal">
+<div class="technical-focus-heading">
+<p class="eyebrow">Technical Focus</p>
+<h3>Where I am building depth</h3>
+</div>
+<div class="technical-focus-grid">
+<article class="technical-focus-cell"><strong>Analog IC</strong><span>CMOS analog · PGA · ADC</span></article>
+<article class="technical-focus-cell"><strong>RFIC / RF CMOS</strong><span>LNA · matching · stability</span></article>
+<article class="technical-focus-cell"><strong>Microwave / HFSS</strong><span>Antenna · S-parameters · SAR</span></article>
+<article class="technical-focus-cell"><strong>Mixed-Signal</strong><span>Image sensors · data conversion</span></article>
+<article class="technical-focus-cell"><strong>EDA Automation</strong><span>Python · NGSPICE · MATLAB</span></article>
+<article class="technical-focus-cell"><strong>Hardware</strong><span>PCB design · practical electronics</span></article>
+</div>
+</div>
 </div>
 <aside class="about-side"><div class="about-side-intro reveal"><h3>Beyond the schematic</h3><p>Technical interests, communication and research direction.</p></div><div class="about-side-grid">
-<article class="about-extra-card reveal spotlight-card">
-<h3>
-           Languages
-          </h3>
-<ul class="language-list">
-<li>
-<strong>
-             Telugu
-            </strong>
-<span>
-             Native
-            </span>
-</li>
-<li>
-<strong>
-             English
-            </strong>
-<span>
-             Working proficiency
-            </span>
-</li>
-<li>
-<strong>
-             Hindi
-            </strong>
-<span>
-             Read · Write · Understand · Basic speaking
-            </span>
-</li>
-</ul>
-</article>
-<article class="about-extra-card interests-card reveal spotlight-card">
-<h3>
+<article class="about-extra-card reveal spotlight-card"><h3>Languages</h3><ul class="language-list simple-language-list"><li><strong>Telugu</strong></li><li><strong>English</strong></li><li><strong>Hindi</strong></li></ul></article>
+<article class="about-extra-card interests-card reveal spotlight-card"><h3>
            Interests
-          </h3>
-<div class="interest-tags">
-<span>
-            Space Electronics
-           </span>
-<span>
-            Defence Electronics
-           </span>
-<span>
-            Radar / RF Systems
-           </span>
-<span>
-            Space &amp; Military History Cinema
-           </span>
-</div>
-</article>
-<article class="about-extra-card research-card reveal spotlight-card">
-<h3>
+          </h3><div class="interest-tags"><span>Space Technology</span><span>Semiconductor Technology</span><span>Electronics &amp; Embedded Systems</span><span>Science &amp; Technology History</span></div></article>
+<article class="about-extra-card research-card reveal spotlight-card"><h3>
            Research interests
-          </h3>
-<div class="interest-tags">
-<span>
-            RFIC / RF CMOS
-           </span>
-<span>
-            Analog CMOS
-           </span>
-<span>
-            Image Sensors
-           </span>
-<span>
-            Mixed-Signal ICs
-           </span>
-<span>
-            EDA Automation
-           </span>
-</div>
-</article>
+          </h3><div class="interest-tags"><span>RFIC / RF CMOS</span><span>Analog CMOS</span><span>Mixed-Signal ICs</span><span>CMOS Image Sensors</span><span>Microwave Engineering &amp; Antennas</span><span>Biomedical RF / Microwave Imaging</span><span>EDA Automation</span></div></article>
 </div></aside></div>
 </div>
 </section>
@@ -598,7 +543,7 @@
 <span class="project-selector-indicator"></span>
 <button aria-label="Show all projects" class="project-selector-core active" data-filter="all" id="projectSelectorAll" type="button"><span>ALL</span><small>PROJECTS</small></button>
 </div>
-<div class="project-selector-options" role="group" aria-label="Project domains">
+<div aria-label="Project domains" class="project-selector-options" role="group">
 <button class="project-selector-option active" data-description="RF CMOS front-end design, low-noise amplification and RFIC work." data-filter="rfic" type="button">RFIC</button>
 <button class="project-selector-option" data-description="Analog CMOS and memory design, including the 180nm 6T SRAM cell." data-filter="analog" type="button">ANALOG</button>
 <button class="project-selector-option" data-description="Python, NGSPICE and reproducible simulation automation workflows." data-filter="eda" type="button">EDA</button>
@@ -643,7 +588,7 @@
 <h3>
          9 GHz CMOS Low Noise Amplifier
         </h3>
-<p>
+<p class="project-summary">
          Unconditionally stable cascode LNA for an X-band radar
                   receiver, with active LC matching and multi-finger transistor
                   implementation.
@@ -734,7 +679,7 @@
 <h3>
          180nm 6T SRAM Cell Design
         </h3>
-<p>
+<p class="project-summary">
          Designed and characterized a six-transistor SRAM cell,
                   evaluating read stability, write behavior and dynamic timing.
         </p><details class="technical-details reveal"><summary>Technical details</summary><div class="technical-details-body"><p><strong>Objective: </strong>Balance read/write stability with low-power operation.</p><p><strong>Architecture: </strong>6T SRAM in 180nm CMOS with optimized cell and pull-up ratios.</p><p><strong>Verification: </strong>VTC, Seevinck read SNM and transient timing analysis.</p><p><strong>Result: </strong>309.0 mV read SNM and 86.39 µW dynamic power.</p></div></details>
@@ -786,7 +731,7 @@
 <h3>
          Automated CMOS Inverter Characterization
         </h3><p class="project-note">Repeatable 180 nm PMOS/NMOS width-sweep characterization with automated VTC extraction.</p>
-<p>
+<p class="project-summary">
          Automated netlist generation, NGSPICE batch simulation,
                   transistor-width sweeps, raw-data parsing and VTC
                   visualization.
@@ -843,7 +788,7 @@
 <h3>
          Dual-Input LiPo Battery Charger
         </h3>
-<p>
+<p class="project-summary">
          Two-layer charger PCB with Micro-USB and DC barrel-jack
                   inputs, OR-ing protection, selectable charging current and
                   thermal-aware layout.
@@ -875,7 +820,21 @@
         </a>
 </div>
 </article>
+<article class="project-card research-project-card reveal spotlight-card" data-category="rfic">
+<div class="research-project-visual">
+<img class="lightbox-img research-evidence-image" alt="SAR simulation practice in Ansys HFSS for brain tumor antenna research" decoding="async" loading="lazy" src="images/brain_tumor_antenna/SAR_Practice.png" title="Open SAR practice evidence"/>
+<span aria-hidden="true" class="research-project-pulse"></span>
+<span class="research-project-image-label">SAR PRACTICE · CURRENT EVIDENCE</span>
 </div>
+<div class="project-info">
+<div class="project-meta"><span>RF / Microwave Research</span><span>Ansys HFSS</span></div>
+<div class="research-live-status"><span class="research-live-dot" aria-hidden="true"></span><strong>LIVE RESEARCH</strong><span>Current HFSS work</span></div>
+<h3>Design &amp; Development of Antenna for Brain Tumor Imaging</h3>
+<div class="research-project-block"><strong>Objective</strong><p>Develop and analyze an RF/microwave antenna-based simulation model for brain-tumor imaging under faculty guidance.</p></div>
+<div class="research-project-block research-detail-only"><strong>Current work</strong><ul class="research-project-list"><li>Antenna modeling in Ansys HFSS</li><li>S-parameter / impedance analysis</li><li>Biological tissue modeling</li><li>E-field analysis</li><li>SAR evaluation</li><li>HFSS meshing and field post-processing</li></ul></div>
+<div class="research-project-status research-detail-only"><strong>Current status</strong><span>Ongoing</span></div>
+</div>
+</article></div>
 </div>
 </section>
 <section class="section education" id="education">
@@ -969,195 +928,7 @@
       </p>
 </div>
 <div class="achievement-grid">
-<article class="achievement-card featured-achievement reveal spotlight-card">
-<div class="achievement-evidence-grid">
-<img alt="Innovation Nexus 2026 Hackathon award presentation" class="lightbox-img" decoding="async" height="700" loading="lazy" src="images/achievements/innovation-nexus1.webp" width="1280"/>
-<img alt="Innovation Nexus 2026 Hackathon team award" class="lightbox-img" decoding="async" height="1037" loading="lazy" src="images/achievements/innovation-nexus2.webp" width="1357"/>
-</div>
-<div class="achievement-body">
-<div class="achievement-topline">
-<span>
-          1st Prize · ₹25,000
-         </span>
-<time datetime="2026-08">
-          Aug 2026
-         </time>
-</div>
-<h3>
-         Innovation Nexus 2026 Hackathon
-        </h3>
-<p>
-<strong>
-          MITS · PathVision &amp; IITNFiF
-         </strong>
-</p>
-<p>1st place among 50 competing teams in a 16-hour hackathon. Led project research, feasibility analysis and architecture planning for a real-time agricultural transport condition monitoring system.</p>
-<p>Built the IoT data-ingestion prototype around an ESP32 with DHT11, MQ-4 and GPS sensors, then presented the solution to the jury.</p>
-</div>
-</article><article class="achievement-card reveal spotlight-card">
-<img alt="Second position Circuit Detective ECLECTICA 2K26" class="lightbox-img" decoding="async" height="480" loading="lazy" src="images/achievements/circuit-detective-eclectica2k26.webp" width="371"/>
-<div>
-<div class="achievement-topline">
-<span>
-          2nd Position
-         </span>
-<time datetime="2026-04">
-          Apr 2026
-         </time>
-</div>
-<h3>
-         Circuit Detective — ECLECTICA 2K26
-        </h3>
-<p>
-         Madapalle Institute of Technology and Science · National Symposium.
-        </p>
-</div>
-</article><article class="achievement-card reveal spotlight-card">
-<img alt="Academic excellence award diploma fifth semester" class="lightbox-img" decoding="async" height="853" loading="lazy" src="images/achievements/Academic-Excellence-Award-(Diploma-5th-Semester).webp" width="1280"/>
-<div>
-<div class="achievement-topline">
-<span>
-          Academic Excellence
-         </span>
-<time datetime="2025-05">
-          May 2025
-         </time>
-</div>
-<h3>
-         5th Semester Academic Excellence
-        </h3>
-<p>
-         ESC Government Polytechnic College.
-        </p>
-</div>
-</article><article class="achievement-card reveal spotlight-card">
-<img alt="First prize Circuit Hunt" class="lightbox-img" decoding="async" height="1326" loading="lazy" src="images/achievements/1st%20Prize-CircuitHunt.webp" width="2122"/>
-<div>
-<div class="achievement-topline">
-<span>
-          1st Prize
-         </span>
-<time datetime="2024-11">
-          Nov 2024
-         </time>
-</div>
-<h3>
-         Circuit Hunt
-        </h3>
-<p>
-         E-Merge 2K24 · JNTUACEA.
-        </p>
-</div>
-</article><article class="achievement-card reveal spotlight-card">
-<img alt="First prize technical quiz" class="lightbox-img" decoding="async" height="1268" loading="lazy" src="images/achievements/1st%20Prize-TechnicalQuiz.webp" width="2050"/>
-<div>
-<div class="achievement-topline">
-<span>
-          1st Prize
-         </span>
-<time datetime="2024-11">
-          Nov 2024
-         </time>
-</div>
-<h3>
-         Technical Quiz
-        </h3>
-<p>
-         E-Merge 2K24 · JNTUACEA.
-        </p>
-</div>
-</article><article class="achievement-card reveal spotlight-card">
-<img alt="Academic excellence award diploma fourth semester" class="lightbox-img" decoding="async" height="572" loading="lazy" src="images/achievements/Academic-Excellence-Reward-(Diploma-4th-Semester).webp" width="1040"/>
-<div>
-<div class="achievement-topline">
-<span>
-          Academic Excellence
-         </span>
-<time datetime="2024-11">
-          Nov 2024
-         </time>
-</div>
-<h3>
-         4th Semester Academic Excellence
-        </h3>
-<p>
-         ESC Government Polytechnic College.
-        </p>
-</div>
-</article><article class="achievement-card reveal spotlight-card more-card">
-<img alt="First prize paper presentation" class="lightbox-img" decoding="async" height="4291" loading="lazy" src="images/achievements/1stPrizePaperPresentationRGM.webp" width="8192"/>
-<div>
-<div class="achievement-topline">
-<span>
-          1st Prize · ₹1,000
-         </span>
-<time datetime="2024-03">
-          Mar 2024
-         </time>
-</div>
-<h3>
-         Paper Presentation — PRAVAHA
-        </h3>
-<p>
-         Ripple National Symposium · RGM College of Engineering, Nandyal.
-        </p>
-</div>
-</article><article class="achievement-card achievement-group-card reveal more-card spotlight-card">
-<div class="achievement-evidence-grid">
-<img alt="Academic excellence award first year third semester" class="lightbox-img" decoding="async" height="577" loading="lazy" src="images/achievements/Academic-Excellence-Reward-(1st-Year&amp;3rd-Semester)1.webp" width="1164"/>
-<img alt="Academic excellence award first year third semester second photo" class="lightbox-img" decoding="async" height="2352" loading="lazy" src="images/achievements/Academic-Excellence-Reward-(1st-Year&amp;3rd-Semester)2.webp" width="3547"/>
-</div>
-<div class="achievement-body">
-<div class="achievement-topline">
-<span>
-          Academic Excellence
-         </span>
-<time>
-          3rd Semester
-         </time>
-</div>
-<h3>
-         3rd Semester Academic Excellence
-        </h3>
-<p>ESC Government Polytechnic College.</p>
-</div>
-</article><article class="achievement-card reveal more-card spotlight-card">
-<img alt="First place August quiz competition" class="lightbox-img" decoding="async" height="484" loading="lazy" src="images/achievements/1st-Place-August-Quiz-Competition.webp" width="819"/>
-<div>
-<div class="achievement-topline">
-<span>
-          1st Place
-         </span>
-<time datetime="2023-08">
-          Aug 2023
-         </time>
-</div>
-<h3>
-         Independence Day Quiz
-        </h3>
-<p>
-         Campus quiz competition winner.
-        </p>
-</div>
-</article><article class="achievement-card reveal more-card spotlight-card">
-<img alt="Second place January quiz competition" class="lightbox-img" decoding="async" height="1200" loading="lazy" src="images/achievements/2nd-Place-January-Quiz-Competition.webp" width="1600"/>
-<div>
-<div class="achievement-topline">
-<span>
-          2nd Place
-         </span>
-<time datetime="2023-01">
-          Jan 2023
-         </time>
-</div>
-<h3>
-         Republic Day Quiz
-        </h3>
-<p>
-         Campus quiz competition recognition.
-        </p>
-</div>
-</article></div>
+<article class="achievement-card featured-achievement reveal spotlight-card"><div class="achievement-evidence-grid"><img alt="Innovation Nexus 2026 Hackathon award presentation" class="lightbox-img" decoding="async" height="700" loading="lazy" src="images/achievements/innovation-nexus1.webp" width="1280"/><img alt="Innovation Nexus 2026 Hackathon team award" class="lightbox-img" decoding="async" height="1037" loading="lazy" src="images/achievements/innovation-nexus2.webp" width="1357"/></div><div class="achievement-body"><div class="achievement-topline"><span>1st Prize · ₹25,000</span><time datetime="2026-08">Aug 2026</time></div><h3>Innovation Nexus 2026 Hackathon</h3><p><strong>MITS ECE Department &amp; PathVision Innovations Pvt Ltd</strong></p><p>Won 1st Prize and a ₹25,000 cash award with Team Tech Vision for a real-time agricultural transport condition monitoring system.</p><p>Led the complete Edge IoT and hardware architecture, including ESP32 processing, multi-modal sensing and the telemetry/data-ingestion pipeline.</p></div></article><article class="achievement-card reveal spotlight-card"><img alt="Second position Circuit Detective ECLECTICA 2K26" class="lightbox-img" decoding="async" height="480" loading="lazy" src="images/achievements/circuit-detective-eclectica2k26.webp" width="371"/><div><div class="achievement-topline"><span>2nd Position</span><time datetime="2026-04">Apr 2026</time></div><h3>Circuit Detective — ECLECTICA 2K26</h3><p><strong>Department of Electronics and Communication Engineering, MITS</strong></p><p>Secured 2nd position in a hardware debugging event during the One-Day National Level Technical Symposium, awarded for technical proficiency in circuit analysis.</p></div></article><article class="achievement-card reveal spotlight-card"><img alt="Academic excellence award diploma fifth semester" class="lightbox-img" decoding="async" height="853" loading="lazy" src="images/achievements/Academic-Excellence-Award-(Diploma-5th-Semester).webp" width="1280"/><div><div class="achievement-topline"><span>Academic Excellence</span><time datetime="2025-05">May 2025</time></div><h3>5th Semester Academic Excellence</h3><p><strong>ESC Government Polytechnic College</strong></p><p>Awarded a wooden memento and merit certificate for outstanding performance in the 5th-semester Diploma examinations.</p></div></article><article class="achievement-card reveal spotlight-card"><img alt="First prize Circuit Hunt" class="lightbox-img" decoding="async" height="1326" loading="lazy" src="images/achievements/1st%20Prize-CircuitHunt.webp" width="2122"/><div><div class="achievement-topline"><span>1st Prize</span><time datetime="2024-11">Nov 2024</time></div><h3>Circuit Hunt</h3><p><strong>JNTUACEA · E-Merge 2K24</strong></p><p>Won 1st prize in the Circuit Hunt technical event at the National Level Technical Symposium.</p><p>The Circuit Hunt and Technical Quiz victories together earned a total ₹2,000 cash prize.</p></div></article><article class="achievement-card reveal spotlight-card"><img alt="First prize technical quiz" class="lightbox-img" decoding="async" height="1268" loading="lazy" src="images/achievements/1st%20Prize-TechnicalQuiz.webp" width="2050"/><div><div class="achievement-topline"><span>1st Prize</span><time datetime="2024-11">Nov 2024</time></div><h3>Technical Quiz</h3><p><strong>JNTUACEA · E-Merge 2K24</strong></p><p>Won 1st prize in the Technical Quiz at the National Level Technical Symposium as part of a team.</p><p>The Circuit Hunt and Technical Quiz victories together earned a total ₹2,000 cash prize.</p></div></article><article class="achievement-card reveal spotlight-card"><img alt="Academic excellence award diploma fourth semester" class="lightbox-img" decoding="async" height="572" loading="lazy" src="images/achievements/Academic-Excellence-Reward-(Diploma-4th-Semester).webp" width="1040"/><div><div class="achievement-topline"><span>Academic Excellence</span><time datetime="2024-11">Nov 2024</time></div><h3>4th Semester Academic Excellence</h3><p><strong>ESC Government Polytechnic College · SBTET Andhra Pradesh</strong></p><p>Recognized for outstanding academic performance in the 4th-semester Diploma examinations and awarded an academic reward.</p></div></article><article class="achievement-card reveal spotlight-card"><img alt="First prize paper presentation" class="lightbox-img" decoding="async" height="4291" loading="lazy" src="images/achievements/1stPrizePaperPresentationRGM.webp" width="8192"/><div><div class="achievement-topline"><span>1st Prize · ₹1,000</span><time datetime="2024-03">Mar 2024</time></div><h3>Paper Presentation — PRAVAHA</h3><p><strong>RGM College of Engineering, Nandyal · Ripple 2K24</strong></p><p>Secured 1st place in the paper presentation competition at the National Level Technical Symposium and received a ₹1,000 cash prize for research presentation and technical communication.</p></div></article><article class="achievement-card achievement-group-card reveal spotlight-card"><div class="achievement-evidence-grid"><img alt="Academic excellence award first year third semester" class="lightbox-img" decoding="async" height="577" loading="lazy" src="images/achievements/Academic-Excellence-Reward-(1st-Year&amp;3rd-Semester)1.webp" width="1164"/><img alt="Academic excellence award first year third semester second photo" class="lightbox-img" decoding="async" height="2352" loading="lazy" src="images/achievements/Academic-Excellence-Reward-(1st-Year&amp;3rd-Semester)2.webp" width="3547"/></div><div class="achievement-body"><div class="achievement-topline"><span>Academic Excellence</span><time datetime="2024-01">Jan 2024</time></div><h3>Academic Excellence — 1st Year &amp; 3rd Semester</h3><p><strong>ESC Government Polytechnic College</strong></p><p>Recognized for outstanding academic performance during the 1st year and 3rd-semester Diploma examinations.</p><p>Received a ₹2,000 cash prize, a French Crown pen and the <em>Integrated Electronics</em> textbook.</p></div></article><article hidden class="achievement-card reveal more-card spotlight-card"><img alt="First place August quiz competition" class="lightbox-img" decoding="async" height="484" loading="lazy" src="images/achievements/1st-Place-August-Quiz-Competition.webp" width="819"/><div><div class="achievement-topline"><span>1st Place</span><time datetime="2023-08">Aug 2023</time></div><h3>Independence Day Quiz</h3><p><strong>ESC Government Polytechnic College</strong></p><p>Won the college-wide quiz competition conducted on Independence Day, 15 August 2023.</p></div></article><article hidden class="achievement-card reveal more-card spotlight-card"><img alt="Second place January quiz competition" class="lightbox-img" decoding="async" height="1200" loading="lazy" src="images/achievements/2nd-Place-January-Quiz-Competition.webp" width="1600"/><div><div class="achievement-topline"><span>2nd Place</span><time datetime="2023-01">Jan 2023</time></div><h3>Republic Day Quiz</h3><p><strong>ESC Government Polytechnic College</strong></p><p>Secured 2nd prize in the college-wide Republic Day quiz during the first year of the Diploma and received a memento.</p></div></article></div>
 <button aria-expanded="false" class="show-more-btn" id="achievementsToggle">View more achievements ↓</button>
 </div>
 </section><section class="section tint" id="credentials">
@@ -1413,15 +1184,18 @@
 <span class="sr-only">
          GitHub
         </span>
-</a>
+</a><a class="footer-cv-link" href="resume.pdf" rel="noopener noreferrer" target="_blank" title="View CV">View CV ↗</a>
 </div>
 </div>
 </div>
 </section>
+
 </main>
 <button aria-label="Reset signal and return to Home" id="backToTop" title="Reset signal — return to Home" type="button"><span class="reset-label">RST</span><span aria-hidden="true" class="reset-arrow">↑</span></button>
+
+
 <footer>
-<div class="container footer-inner"><span class="footer-copy">© 2026 Chavali Uddipa Dattudu. All rights reserved.</span><span class="footer-focus">VLSI · RFIC · Analog IC Design</span><span class="footer-updated">Updated September 2026</span></div>
+<div class="container footer-inner"><span class="footer-copy">© 2026 Chavali Uddipa Dattudu. All rights reserved.</span><span class="footer-updated"><span id="footerUpdatedText"></span><span aria-hidden="true" class="footer-caret"></span></span></div>
 </footer>
 <dialog aria-label="Image viewer" aria-labelledby="lightboxCaption" class="lightbox" id="lightbox" role="dialog">
 <button aria-label="Close image" autofocus="true" class="lightbox-close" id="lightboxClose" type="button">
@@ -1439,8 +1213,8 @@
     </button>
 </div>
 <div class="lightbox-stage" id="lightboxStage">
-<div class="lightbox-loading" id="lightboxLoading" role="status" aria-live="polite">Loading image<span aria-hidden="true">…</span></div>
-<div class="lightbox-error" id="lightboxError" role="alert" hidden>
+<div aria-live="polite" class="lightbox-loading" id="lightboxLoading" role="status">Loading image<span aria-hidden="true">…</span></div>
+<div class="lightbox-error" hidden="" id="lightboxError" role="alert">
 <strong>Unable to load this image.</strong>
 <span>Check the file path or repository asset and try again.</span>
 <button id="lightboxRetry" type="button">Try again</button>
