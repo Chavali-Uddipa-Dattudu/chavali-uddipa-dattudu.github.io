@@ -17,9 +17,14 @@
 
   const updateThemeUI = () => {
     const dark = root.dataset.theme === "dark";
-    const label = dark ? "Invert to light theme" : "Invert to dark theme";
+    const label = dark ? "Switch to light theme" : "Switch to dark theme";
     themeToggle?.setAttribute("aria-label", label);
-    themeToggle?.setAttribute("title", label);
+    themeToggle?.setAttribute("title", "Switch light and dark theme");
+
+    const moon = $("#themeMoon");
+    const sun = $("#themeSun");
+    moon?.setAttribute("aria-hidden", "true");
+    sun?.setAttribute("aria-hidden", "true");
   };
 
   updateThemeUI();
@@ -47,14 +52,35 @@
 
   const closeMenu = () => {
     navMenu?.classList.remove("open");
+    document.body.classList.remove("mobile-menu-open");
     menuToggle?.setAttribute("aria-expanded", "false");
     menuToggle?.setAttribute("aria-label", "Open menu");
+    menuToggle?.focus({ preventScroll: true });
   };
 
   menuToggle?.addEventListener("click", () => {
-    const open = navMenu?.classList.toggle("open") ?? false;
+    const open = !navMenu?.classList.contains("open");
+    navMenu?.classList.toggle("open", open);
+    document.body.classList.toggle("mobile-menu-open", open);
     menuToggle?.setAttribute("aria-expanded", String(open));
     menuToggle?.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!document.body.classList.contains("mobile-menu-open")) return;
+    if (navMenu?.contains(event.target) || menuToggle?.contains(event.target))
+      return;
+    closeMenu();
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (
+      event.key === "Escape" &&
+      document.body.classList.contains("mobile-menu-open")
+    ) {
+      event.preventDefault();
+      closeMenu();
+    }
   });
 
   const updateHeader = () => {
@@ -242,9 +268,16 @@
      Achievements expansion
   --------------------------------------------------------- */
   const achievementToggle = $("#achievementsToggle");
+  const moreAchievementCards = $$(".achievement-card.more-card");
+  moreAchievementCards.forEach((card) => {
+    card.hidden = true;
+    card.classList.remove("visible");
+  });
+
   achievementToggle?.addEventListener("click", () => {
     const expanded = achievementToggle.getAttribute("aria-expanded") === "true";
-    $$(".achievement-card.more-card").forEach((card) => {
+    moreAchievementCards.forEach((card) => {
+      card.hidden = expanded;
       card.classList.toggle("visible", !expanded);
     });
     achievementToggle.setAttribute("aria-expanded", String(!expanded));
@@ -389,6 +422,74 @@
   /* ---------------------------------------------------------
      Achievement + project detail modal
   --------------------------------------------------------- */
+  const buildExpandingSignalPath = (
+    pathElement,
+    cycles = 12,
+    width = 900,
+    height = 140,
+    startAmplitude = 7,
+    endAmplitude = 42,
+  ) => {
+    if (!pathElement) return 0;
+
+    const mid = height / 2;
+    const samples = 960;
+    const points = [];
+
+    for (let i = 0; i <= samples; i += 1) {
+      const t = i / samples;
+      const x = t * width;
+      const amplitude = startAmplitude + (endAmplitude - startAmplitude) * t;
+      const y = mid - Math.sin(t * Math.PI * 2 * cycles) * amplitude;
+      points.push(`${x.toFixed(2)},${y.toFixed(2)}`);
+    }
+
+    pathElement.setAttribute("d", `M ${points.join(" L ")}`);
+    return pathElement.getTotalLength();
+  };
+
+  const animateSignalTip = (
+    pathElement,
+    tipElement,
+    duration = 1000,
+    activeClass = "detail-signal-travelling",
+  ) => {
+    if (!pathElement || !tipElement) return;
+
+    const total = pathElement.getTotalLength();
+    if (!total || reducedMotion) {
+      const point = pathElement.getPointAtLength(total);
+      tipElement.setAttribute("cx", point.x);
+      tipElement.setAttribute("cy", point.y);
+      return;
+    }
+
+    tipElement.classList.add(activeClass);
+    const started = performance.now();
+
+    const frame = (now) => {
+      const progress = Math.min(1, (now - started) / duration);
+      const eased = 0.5 - 0.5 * Math.cos(progress * Math.PI);
+      const distance = total * (1 - eased);
+      const point = pathElement.getPointAtLength(distance);
+
+      tipElement.setAttribute("cx", point.x);
+      tipElement.setAttribute("cy", point.y);
+
+      if (progress < 1) {
+        requestAnimationFrame(frame);
+      } else {
+        tipElement.classList.remove(activeClass);
+      }
+    };
+
+    const startPoint = pathElement.getPointAtLength(total);
+    tipElement.setAttribute("cx", startPoint.x);
+    tipElement.setAttribute("cy", startPoint.y);
+
+    requestAnimationFrame(frame);
+  };
+
   const createDetailModal = () => {
     const existing = document.getElementById("detailModal");
     if (existing) return existing;
@@ -401,9 +502,10 @@
       <div class="detail-modal-panel">
         <button class="detail-modal-close" id="detailModalClose" type="button" aria-label="Close details">×</button>
         <div class="detail-amplify-signal" aria-hidden="true">
-          <svg viewBox="0 0 900 120" preserveAspectRatio="none">
-            <path class="signal-glow" d="M0 60 C45 60 55 16 100 16 S155 104 200 104 S255 16 300 16 S355 104 400 104 S455 16 500 16 S555 104 600 104 S655 16 700 16 S755 104 800 104 S855 60 900 60"></path>
-            <path class="signal-base" d="M0 60 C45 60 55 16 100 16 S155 104 200 104 S255 16 300 16 S355 104 400 104 S455 16 500 16 S555 104 600 104 S655 16 700 16 S755 104 800 104 S855 60 900 60"></path>
+          <svg viewBox="0 0 900 140" preserveAspectRatio="none">
+            <path class="signal-glow" id="detailSignalGlow"></path>
+            <path class="signal-base" id="detailSignalPath"></path>
+            <circle class="detail-signal-tip" id="detailSignalTip" cx="0" cy="70" r="4.2"></circle>
           </svg>
         </div>
         <div class="detail-modal-content" id="detailModalContent"></div>
@@ -414,6 +516,9 @@
   };
 
   const detailModal = createDetailModal();
+  $$(".project-card").forEach((card) => {
+    card.__detailTemplate = card.cloneNode(true);
+  });
   const detailModalContent = document.getElementById("detailModalContent");
   const detailModalClose = document.getElementById("detailModalClose");
 
@@ -476,6 +581,9 @@
     clone
       .querySelectorAll("[hidden]")
       .forEach((element) => element.removeAttribute("hidden"));
+    clone.querySelectorAll("details").forEach((details) => {
+      details.open = true;
+    });
     return clone;
   };
 
@@ -483,8 +591,30 @@
     if (!detailModal || !detailModalContent || !card) return;
 
     const source = card.__detailTemplate || card;
+    detailModal.__returnScrollY = window.scrollY || window.pageYOffset || 0;
     const clone = sanitizeDetailClone(source.cloneNode(true));
     detailModalContent.replaceChildren(clone);
+
+    const detailSignalBase = $("#detailSignalPath", detailModal);
+    const detailSignalGlow = $("#detailSignalGlow", detailModal);
+    const detailSignalTip = $("#detailSignalTip", detailModal);
+
+    if (detailSignalBase && detailSignalGlow && detailSignalTip) {
+      buildExpandingSignalPath(detailSignalBase, 12, 900, 140, 7, 42);
+      detailSignalGlow.setAttribute("d", detailSignalBase.getAttribute("d"));
+      if (reducedMotion) {
+        const start = detailSignalBase.getPointAtLength(0);
+        detailSignalTip.setAttribute("cx", start.x);
+        detailSignalTip.setAttribute("cy", start.y);
+      } else {
+        animateSignalTip(
+          detailSignalBase,
+          detailSignalTip,
+          1000,
+          "detail-signal-travelling",
+        );
+      }
+    }
 
     detailModal.classList.remove("is-amplifying");
     void detailModal.offsetWidth;
@@ -498,12 +628,16 @@
 
     document.body.style.overflow = "hidden";
 
+    requestAnimationFrame(() => {
+      window.scrollTo(0, detailModal.__returnScrollY || 0);
+    });
+
     clearTimeout(detailModal.__amplifyTimer);
     detailModal.__amplifyTimer = setTimeout(() => {
       detailModal.classList.remove("is-amplifying");
     }, 1000);
 
-    detailModalClose?.focus();
+    detailModalClose?.focus({ preventScroll: true });
   };
 
   const closeDetailModal = () => {
@@ -517,6 +651,11 @@
     detailModal.classList.remove("fallback-open", "is-amplifying");
     detailModalContent?.replaceChildren();
     document.body.style.overflow = "";
+    requestAnimationFrame(() => {
+      if (typeof detailModal.__returnScrollY === "number") {
+        window.scrollTo(0, detailModal.__returnScrollY);
+      }
+    });
   };
 
   compactAchievementCards();
@@ -578,6 +717,11 @@
   });
   detailModal?.addEventListener("close", () => {
     document.body.style.overflow = "";
+    requestAnimationFrame(() => {
+      if (typeof detailModal.__returnScrollY === "number") {
+        window.scrollTo(0, detailModal.__returnScrollY);
+      }
+    });
   });
 
   /* ---------------------------------------------------------
@@ -1077,33 +1221,6 @@
   selectProjectDomain("all", null);
 
   /* ---------------------------------------------------------
-     About rotary selector
-  --------------------------------------------------------- */
-  const focusDial = $("#aboutSelectorDial");
-  const focusDescription = $("#aboutSelectorDescription");
-  const focusOptions = $$(".selector-option");
-  const focusAngles = [0, 72, 144, 216, 288];
-
-  const selectFocus = (button, index) => {
-    focusOptions.forEach((item) =>
-      item.classList.toggle("active", item === button),
-    );
-    if (focusDescription)
-      focusDescription.textContent = button.dataset.description || "";
-
-    if (focusDial) {
-      const angle = focusAngles[index] || 0;
-      focusDial.style.transform = `rotate(${angle}deg)`;
-      const core = focusDial.querySelector(".selector-core");
-      if (core) core.style.transform = `rotate(${-angle}deg)`;
-    }
-  };
-
-  focusOptions.forEach((button, index) => {
-    button.addEventListener("click", () => selectFocus(button, index));
-  });
-
-  /* ---------------------------------------------------------
      Academic pathway — signal handoff
   --------------------------------------------------------- */
   const pathway = $(".education-pathway");
@@ -1205,6 +1322,81 @@
   });
 
   /* ---------------------------------------------------------
+     Initial loader — 12-cycle RF signal, right-to-left sweep
+  --------------------------------------------------------- */
+  const buildLoaderSignal = (
+    pathElement,
+    width = 720,
+    height = 120,
+    cycles = 12,
+  ) => {
+    if (!pathElement) return 0;
+
+    const mid = height / 2;
+    const samples = 960;
+    const points = [];
+
+    for (let i = 0; i <= samples; i += 1) {
+      const t = i / samples;
+      const x = t * width;
+      const amplitude = 7 + 31 * t;
+      const envelope = 0.94 + 0.06 * Math.sin(t * Math.PI * 2);
+      const y = mid - Math.sin(t * Math.PI * 2 * cycles) * amplitude * envelope;
+      points.push(`${x.toFixed(2)},${y.toFixed(2)}`);
+    }
+
+    pathElement.setAttribute("d", `M ${points.join(" L ")}`);
+    return pathElement.getTotalLength();
+  };
+
+  const initLoaderSignal = () => {
+    const path = $("#loaderSignalPath");
+    const echo = $("#loaderSignalEcho");
+    const tip = $(".loader-signal-tip");
+    const ring = $(".loader-signal-ring");
+    if (!path || !tip) return;
+
+    const total = buildLoaderSignal(path, 720, 120, 12);
+    if (!total) return;
+
+    if (echo) {
+      echo.setAttribute("d", path.getAttribute("d") || "");
+    }
+
+    const setPoint = (distance) => {
+      const point = path.getPointAtLength(distance);
+      tip.setAttribute("cx", point.x);
+      tip.setAttribute("cy", point.y);
+      ring?.setAttribute("cx", point.x);
+      ring?.setAttribute("cy", point.y);
+    };
+
+    setPoint(total);
+
+    if (reducedMotion) return;
+
+    tip.classList.add("is-travelling");
+    ring?.classList.add("is-travelling");
+
+    const duration = 1700;
+    const started = performance.now();
+
+    const frame = (now) => {
+      const elapsed = (now - started) % duration;
+      const progress = elapsed / duration;
+      const eased = 0.5 - 0.5 * Math.cos(progress * Math.PI);
+
+      /* Right → left, while the full twelve-cycle path stays visible. */
+      setPoint(total * (1 - eased));
+      requestAnimationFrame(frame);
+    };
+
+    requestAnimationFrame(frame);
+  };
+
+  initLoaderSignal();
+
+  /* ---------------------------------------------------------
      Initial loader
   --------------------------------------------------------- */
   const loader = $("#siteLoader");
@@ -1215,16 +1407,50 @@
     loaderFinished = true;
     loader?.classList.add("is-done");
     document.body.classList.remove("is-booting");
-    setTimeout(showGuideOnce, reducedMotion ? 80 : 260);
   };
 
   window.addEventListener(
     "load",
-    () => setTimeout(finishLoader, reducedMotion ? 250 : 900),
+    () => setTimeout(finishLoader, reducedMotion ? 250 : 1450),
     { once: true },
   );
 
   setTimeout(finishLoader, reducedMotion ? 1800 : 4200);
+
+  /* ---------------------------------------------------------
+     Footer updated-date typing / clearing / retyping loop
+  --------------------------------------------------------- */
+  const footerUpdatedText = $("#footerUpdatedText");
+
+  if (footerUpdatedText) {
+    const footerText = "Updated September 2026";
+
+    if (reducedMotion) {
+      footerUpdatedText.textContent = footerText;
+    } else {
+      const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+      (async () => {
+        while (true) {
+          footerUpdatedText.textContent = "";
+
+          for (let i = 0; i <= footerText.length; i += 1) {
+            footerUpdatedText.textContent = footerText.slice(0, i);
+            await wait(i === 0 ? 260 : 48);
+          }
+
+          await wait(1800);
+
+          for (let i = footerText.length; i >= 0; i -= 1) {
+            footerUpdatedText.textContent = footerText.slice(0, i);
+            await wait(i === footerText.length ? 110 : 34);
+          }
+
+          await wait(520);
+        }
+      })();
+    }
+  }
 
   /* ---------------------------------------------------------
      First-visit guide
@@ -1232,18 +1458,16 @@
   const guide = $("#siteGuide");
   const guideClose = $("#guideClose");
   const guideStart = $("#guideStart");
-  const GUIDE_KEY = "portfolio-tour-clean";
 
   const closeGuide = () => {
     if (!guide) return;
     guide.setAttribute("hidden", "");
     guide.setAttribute("aria-hidden", "true");
     document.body.style.overflow = "";
-    localStorage.setItem(GUIDE_KEY, "true");
   };
 
   const showGuideOnce = () => {
-    if (!guide || localStorage.getItem(GUIDE_KEY) === "true") return;
+    if (!guide) return;
     guide.removeAttribute("hidden");
     guide.setAttribute("aria-hidden", "false");
     document.body.style.overflow = "hidden";
@@ -1264,6 +1488,46 @@
   });
 
   /* ---------------------------------------------------------
+     Cursor → RF field ripple
+  --------------------------------------------------------- */
+  if (!matchMedia("(pointer: coarse)").matches) {
+    let cursorFrame = 0;
+    let cursorX = -300;
+    let cursorY = -300;
+
+    const renderCursorField = () => {
+      cursorFrame = 0;
+      document.body.style.setProperty("--cursor-x", `${cursorX}px`);
+      document.body.style.setProperty("--cursor-y", `${cursorY}px`);
+    };
+
+    window.addEventListener(
+      "pointermove",
+      (event) => {
+        cursorX = event.clientX;
+        cursorY = event.clientY;
+
+        if (!cursorFrame) {
+          cursorFrame = requestAnimationFrame(renderCursorField);
+        }
+      },
+      { passive: true },
+    );
+
+    window.addEventListener(
+      "pointerleave",
+      () => {
+        cursorX = -300;
+        cursorY = -300;
+        if (!cursorFrame) {
+          cursorFrame = requestAnimationFrame(renderCursorField);
+        }
+      },
+      { passive: true },
+    );
+  }
+
+  /* ---------------------------------------------------------
      Scroll progress
   --------------------------------------------------------- */
   const scrollProgress = $("#scrollProgress");
@@ -1280,4 +1544,240 @@
 
   updateScrollProgress();
   window.addEventListener("scroll", updateScrollProgress, { passive: true });
+
+  /* ---------------------------------------------------------
+     Click-to-ripple RF / pond-wave field
+     Each left click creates one finite wave source.
+     Reflections are represented with rectangular image sources.
+     Multiple sources are superposed so overlapping fronts produce
+     constructive/destructive interference.
+  --------------------------------------------------------- */
+  (() => {
+    const canvas = document.getElementById("rfWaveCanvas");
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d", { alpha: true });
+    if (!ctx) return;
+
+    const reduced = reducedMotion;
+    const waves = [];
+    let dpr = Math.min(window.devicePixelRatio || 1, 1.7);
+    let width = 1;
+    let height = 1;
+    let lastFrame = performance.now();
+
+    const MAX_WAVES = 14;
+    const LIFE_MS = 3200;
+    const SPEED = 560;
+    const WAVELENGTH = 34;
+    const K = (Math.PI * 2) / WAVELENGTH;
+    const REFLECTION_LOSS = 0.72;
+    const RING_SAMPLES = 220;
+
+    const resize = () => {
+      dpr = Math.min(window.devicePixelRatio || 1, 1.7);
+      width = Math.max(1, window.innerWidth);
+      height = Math.max(1, window.innerHeight);
+      canvas.width = Math.floor(width * dpr);
+      canvas.height = Math.floor(height * dpr);
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+
+    resize();
+    window.addEventListener("resize", resize, { passive: true });
+
+    const isBackgroundClick = (event) => {
+      if (event.button !== 0) return false;
+
+      const target = event.target;
+      if (!(target instanceof Element)) return false;
+
+      // Only blank/background areas trigger the effect.
+      const blocked = target.closest(
+        [
+          "a",
+          "button",
+          "input",
+          "textarea",
+          "select",
+          "summary",
+          "details",
+          "dialog",
+          ".site-header",
+          ".site-guide-overlay",
+          ".lightbox",
+          ".detail-modal",
+          ".project-card",
+          ".experience-card",
+          ".credential-card",
+          ".achievement-card",
+          ".snapshot-card",
+          ".technical-profile",
+          ".technical-focus",
+          ".about-extra-card",
+          ".education-row",
+          ".education-pathway",
+          ".contact",
+          "footer",
+          ".research-project-card",
+        ].join(","),
+      );
+
+      return !blocked;
+    };
+
+    const addWave = (x, y) => {
+      waves.push({
+        x,
+        y,
+        born: performance.now(),
+        phase: Math.random() * Math.PI * 2,
+      });
+
+      while (waves.length > MAX_WAVES) waves.shift();
+    };
+
+    document.addEventListener(
+      "pointerdown",
+      (event) => {
+        if (reduced || !isBackgroundClick(event)) return;
+        addWave(event.clientX, event.clientY);
+      },
+      { passive: true },
+    );
+
+    // First-order + second-order rectangular image sources.
+    const getImageSources = (wave) => {
+      const x = wave.x;
+      const y = wave.y;
+      const w = width;
+      const h = height;
+
+      return [
+        { x, y, a: 1.0, p: 0 },
+        { x: -x, y, a: REFLECTION_LOSS, p: Math.PI },
+        { x: 2 * w - x, y, a: REFLECTION_LOSS, p: Math.PI },
+        { x, y: -y, a: REFLECTION_LOSS, p: Math.PI },
+        { x, y: 2 * h - y, a: REFLECTION_LOSS, p: Math.PI },
+
+        { x: -x, y: -y, a: REFLECTION_LOSS * REFLECTION_LOSS, p: 0 },
+        { x: -x, y: 2 * h - y, a: REFLECTION_LOSS * REFLECTION_LOSS, p: 0 },
+        { x: 2 * w - x, y: -y, a: REFLECTION_LOSS * REFLECTION_LOSS, p: 0 },
+        {
+          x: 2 * w - x,
+          y: 2 * h - y,
+          a: REFLECTION_LOSS * REFLECTION_LOSS,
+          p: 0,
+        },
+      ];
+    };
+
+    const drawInterferingRing = (source, radius, baseAlpha, now) => {
+      const sources = waves.flatMap(getImageSources);
+      const phaseTime = ((now - source.born) / 1000) * SPEED;
+
+      ctx.beginPath();
+
+      for (let i = 0; i <= RING_SAMPLES; i += 1) {
+        const theta = (i / RING_SAMPLES) * Math.PI * 2;
+        const px = source.x + Math.cos(theta) * radius;
+        const py = source.y + Math.sin(theta) * radius;
+
+        // Superpose all active virtual waves at this point.
+        let field = 0;
+        for (const other of sources) {
+          const dx = px - other.x;
+          const dy = py - other.y;
+          const distance = Math.hypot(dx, dy);
+          const phase = K * (distance - phaseTime) + other.p;
+          field += other.a * Math.cos(phase);
+        }
+
+        // Normalize the interference response into a visible but restrained range.
+        const interference = Math.max(
+          -1,
+          Math.min(1, field / Math.max(1, sources.length * 0.82)),
+        );
+        const visibility = 0.28 + 0.72 * Math.abs(interference);
+        const signed = interference >= 0 ? 1 : -1;
+
+        // Very small radial perturbation makes overlaps feel like real wave interference.
+        const localRadius = radius + interference * 1.8;
+
+        const x = source.x + Math.cos(theta) * localRadius;
+        const y = source.y + Math.sin(theta) * localRadius;
+
+        if (i === 0) {
+          ctx.moveTo(x, y);
+        } else {
+          ctx.lineTo(x, y);
+        }
+
+        // Periodic micro-breaks make destructive zones visibly thinner/dimmer.
+        if (signed < 0 && visibility < 0.42 && i % 6 === 0) {
+          ctx.moveTo(x + 1.2, y + 1.2);
+        }
+      }
+
+      ctx.strokeStyle = `rgba(199, 154, 59, ${Math.min(0.42, baseAlpha * 0.72)})`;
+      ctx.lineWidth = 0.68;
+      ctx.stroke();
+    };
+
+    const draw = (now) => {
+      const dt = Math.min(50, now - lastFrame);
+      lastFrame = now;
+
+      ctx.clearRect(0, 0, width, height);
+
+      for (let i = waves.length - 1; i >= 0; i -= 1) {
+        const wave = waves[i];
+        const age = now - wave.born;
+
+        if (age > LIFE_MS) {
+          waves.splice(i, 1);
+          continue;
+        }
+
+        const t = age / LIFE_MS;
+        const radius = (age / 1000) * SPEED;
+
+        // Fade in quickly, remain visible, then dissolve during the last ~1 sec.
+        const lifeFade =
+          t < 0.08 ? t / 0.08 : t > 0.68 ? 1 - (t - 0.68) / 0.32 : 1;
+
+        // Draw the direct front; reflected fronts appear through the image-source
+        // interference field below.
+        drawInterferingRing(wave, radius, Math.max(0, lifeFade), now);
+
+        // Add a softer reflected fringe using the same physical field.
+        if (radius > 40) {
+          const fringeAlpha = lifeFade * 0.24;
+          drawInterferingRing(wave, radius + 5, fringeAlpha, now);
+          drawInterferingRing(
+            wave,
+            Math.max(12, radius - 5),
+            fringeAlpha * 0.65,
+            now,
+          );
+        }
+      }
+
+      requestAnimationFrame(draw);
+    };
+
+    requestAnimationFrame(draw);
+
+    // Reposition the field if the document is scrolled so the wave remains
+    // attached to viewport click coordinates, matching the visual pond analogy.
+    window.addEventListener(
+      "scroll",
+      () => {
+        // Canvas is viewport-fixed; no coordinate conversion is necessary.
+      },
+      { passive: true },
+    );
+  })();
 })();
