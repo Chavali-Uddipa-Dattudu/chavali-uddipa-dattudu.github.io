@@ -1487,6 +1487,7 @@
     }
   });
 
+
   /* ---------------------------------------------------------
      Cursor → RF field ripple
   --------------------------------------------------------- */
@@ -1544,6 +1545,7 @@
 
   updateScrollProgress();
   window.addEventListener("scroll", updateScrollProgress, { passive: true });
+
 
   /* ---------------------------------------------------------
      Click-to-ripple RF / pond-wave field
@@ -1621,7 +1623,7 @@
           ".education-pathway",
           ".contact",
           "footer",
-          ".research-project-card",
+          ".research-project-card"
         ].join(","),
       );
 
@@ -1665,12 +1667,7 @@
         { x: -x, y: -y, a: REFLECTION_LOSS * REFLECTION_LOSS, p: 0 },
         { x: -x, y: 2 * h - y, a: REFLECTION_LOSS * REFLECTION_LOSS, p: 0 },
         { x: 2 * w - x, y: -y, a: REFLECTION_LOSS * REFLECTION_LOSS, p: 0 },
-        {
-          x: 2 * w - x,
-          y: 2 * h - y,
-          a: REFLECTION_LOSS * REFLECTION_LOSS,
-          p: 0,
-        },
+        { x: 2 * w - x, y: 2 * h - y, a: REFLECTION_LOSS * REFLECTION_LOSS, p: 0 },
       ];
     };
 
@@ -1696,10 +1693,7 @@
         }
 
         // Normalize the interference response into a visible but restrained range.
-        const interference = Math.max(
-          -1,
-          Math.min(1, field / Math.max(1, sources.length * 0.82)),
-        );
+        const interference = Math.max(-1, Math.min(1, field / Math.max(1, sources.length * 0.82)));
         const visibility = 0.28 + 0.72 * Math.abs(interference);
         const signed = interference >= 0 ? 1 : -1;
 
@@ -1746,7 +1740,11 @@
 
         // Fade in quickly, remain visible, then dissolve during the last ~1 sec.
         const lifeFade =
-          t < 0.08 ? t / 0.08 : t > 0.68 ? 1 - (t - 0.68) / 0.32 : 1;
+          t < 0.08
+            ? t / 0.08
+            : t > 0.68
+              ? 1 - (t - 0.68) / 0.32
+              : 1;
 
         // Draw the direct front; reflected fronts appear through the image-source
         // interference field below.
@@ -1756,12 +1754,7 @@
         if (radius > 40) {
           const fringeAlpha = lifeFade * 0.24;
           drawInterferingRing(wave, radius + 5, fringeAlpha, now);
-          drawInterferingRing(
-            wave,
-            Math.max(12, radius - 5),
-            fringeAlpha * 0.65,
-            now,
-          );
+          drawInterferingRing(wave, Math.max(12, radius - 5), fringeAlpha * 0.65, now);
         }
       }
 
@@ -1772,12 +1765,9 @@
 
     // Reposition the field if the document is scrolled so the wave remains
     // attached to viewport click coordinates, matching the visual pond analogy.
-    window.addEventListener(
-      "scroll",
-      () => {
-        // Canvas is viewport-fixed; no coordinate conversion is necessary.
-      },
-      { passive: true },
-    );
+    window.addEventListener("scroll", () => {
+      // Canvas is viewport-fixed; no coordinate conversion is necessary.
+    }, { passive: true });
   })();
+
 })();
