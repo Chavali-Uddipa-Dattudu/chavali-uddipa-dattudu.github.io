@@ -46,42 +46,7 @@
      Header / navigation
   --------------------------------------------------------- */
   const header = $(".site-header");
-  const menuToggle = $(".menu-toggle");
-  const navMenu = $("#primary-nav");
   const navLinks = $$("#primary-nav a");
-
-  const closeMenu = () => {
-    navMenu?.classList.remove("open");
-    document.body.classList.remove("mobile-menu-open");
-    menuToggle?.setAttribute("aria-expanded", "false");
-    menuToggle?.setAttribute("aria-label", "Open menu");
-    menuToggle?.focus({ preventScroll: true });
-  };
-
-  menuToggle?.addEventListener("click", () => {
-    const open = !navMenu?.classList.contains("open");
-    navMenu?.classList.toggle("open", open);
-    document.body.classList.toggle("mobile-menu-open", open);
-    menuToggle?.setAttribute("aria-expanded", String(open));
-    menuToggle?.setAttribute("aria-label", open ? "Close menu" : "Open menu");
-  });
-
-  document.addEventListener("click", (event) => {
-    if (!document.body.classList.contains("mobile-menu-open")) return;
-    if (navMenu?.contains(event.target) || menuToggle?.contains(event.target))
-      return;
-    closeMenu();
-  });
-
-  document.addEventListener("keydown", (event) => {
-    if (
-      event.key === "Escape" &&
-      document.body.classList.contains("mobile-menu-open")
-    ) {
-      event.preventDefault();
-      closeMenu();
-    }
-  });
 
   const updateHeader = () => {
     header?.classList.toggle("is-scrolled", window.scrollY > 12);
@@ -103,7 +68,6 @@
 
   navLinks.forEach((link) => {
     link.addEventListener("click", () => {
-      closeMenu();
       const target = $(link.getAttribute("href") || "");
       link.classList.remove("route-active");
       void link.offsetWidth;
@@ -628,16 +592,16 @@
 
     document.body.style.overflow = "hidden";
 
-    requestAnimationFrame(() => {
-      window.scrollTo(0, detailModal.__returnScrollY || 0);
-    });
-
     clearTimeout(detailModal.__amplifyTimer);
     detailModal.__amplifyTimer = setTimeout(() => {
       detailModal.classList.remove("is-amplifying");
     }, 1000);
 
     detailModalClose?.focus({ preventScroll: true });
+
+    requestAnimationFrame(() => {
+      window.scrollTo(0, detailModal.__returnScrollY || 0);
+    });
   };
 
   const closeDetailModal = () => {
@@ -659,12 +623,14 @@
   };
 
   compactAchievementCards();
-  $$(".project-card, .achievement-card").forEach((card) => {
-    card.tabIndex = 0;
-    card.setAttribute("role", "button");
-    const title = card.querySelector("h3")?.textContent.trim() || "details";
-    card.setAttribute("aria-label", `Open ${title}`);
-  });
+  $$(".project-card:not(.coming-soon-card), .achievement-card").forEach(
+    (card) => {
+      card.tabIndex = 0;
+      card.setAttribute("role", "button");
+      const title = card.querySelector("h3")?.textContent.trim() || "details";
+      card.setAttribute("aria-label", `Open ${title}`);
+    },
+  );
 
   document.addEventListener("click", (event) => {
     const readMore = event.target.closest(".achievement-readmore");
@@ -680,7 +646,9 @@
 
     if (event.target.closest(".detail-modal")) return;
 
-    const projectCard = event.target.closest(".project-card");
+    const projectCard = event.target.closest(
+      ".project-card:not(.coming-soon-card)",
+    );
     if (projectCard && !event.target.closest("a, button, summary, details")) {
       openDetailModal(projectCard);
       return;
@@ -703,7 +671,7 @@
 
     if (
       (event.key === "Enter" || event.key === " ") &&
-      (event.target.matches?.(".project-card") ||
+      (event.target.matches?.(".project-card:not(.coming-soon-card)") ||
         event.target.matches?.(".achievement-card"))
     ) {
       event.preventDefault();
@@ -1322,81 +1290,6 @@
   });
 
   /* ---------------------------------------------------------
-     Initial loader — 12-cycle RF signal, right-to-left sweep
-  --------------------------------------------------------- */
-  const buildLoaderSignal = (
-    pathElement,
-    width = 720,
-    height = 120,
-    cycles = 12,
-  ) => {
-    if (!pathElement) return 0;
-
-    const mid = height / 2;
-    const samples = 960;
-    const points = [];
-
-    for (let i = 0; i <= samples; i += 1) {
-      const t = i / samples;
-      const x = t * width;
-      const amplitude = 7 + 31 * t;
-      const envelope = 0.94 + 0.06 * Math.sin(t * Math.PI * 2);
-      const y = mid - Math.sin(t * Math.PI * 2 * cycles) * amplitude * envelope;
-      points.push(`${x.toFixed(2)},${y.toFixed(2)}`);
-    }
-
-    pathElement.setAttribute("d", `M ${points.join(" L ")}`);
-    return pathElement.getTotalLength();
-  };
-
-  const initLoaderSignal = () => {
-    const path = $("#loaderSignalPath");
-    const echo = $("#loaderSignalEcho");
-    const tip = $(".loader-signal-tip");
-    const ring = $(".loader-signal-ring");
-    if (!path || !tip) return;
-
-    const total = buildLoaderSignal(path, 720, 120, 12);
-    if (!total) return;
-
-    if (echo) {
-      echo.setAttribute("d", path.getAttribute("d") || "");
-    }
-
-    const setPoint = (distance) => {
-      const point = path.getPointAtLength(distance);
-      tip.setAttribute("cx", point.x);
-      tip.setAttribute("cy", point.y);
-      ring?.setAttribute("cx", point.x);
-      ring?.setAttribute("cy", point.y);
-    };
-
-    setPoint(total);
-
-    if (reducedMotion) return;
-
-    tip.classList.add("is-travelling");
-    ring?.classList.add("is-travelling");
-
-    const duration = 1700;
-    const started = performance.now();
-
-    const frame = (now) => {
-      const elapsed = (now - started) % duration;
-      const progress = elapsed / duration;
-      const eased = 0.5 - 0.5 * Math.cos(progress * Math.PI);
-
-      /* Right → left, while the full twelve-cycle path stays visible. */
-      setPoint(total * (1 - eased));
-      requestAnimationFrame(frame);
-    };
-
-    requestAnimationFrame(frame);
-  };
-
-  initLoaderSignal();
-
-  /* ---------------------------------------------------------
      Initial loader
   --------------------------------------------------------- */
   const loader = $("#siteLoader");
@@ -1407,15 +1300,16 @@
     loaderFinished = true;
     loader?.classList.add("is-done");
     document.body.classList.remove("is-booting");
+    setTimeout(showGuideOnce, reducedMotion ? 120 : 320);
   };
 
   window.addEventListener(
     "load",
-    () => setTimeout(finishLoader, reducedMotion ? 250 : 1450),
+    () => setTimeout(finishLoader, reducedMotion ? 180 : 1100),
     { once: true },
   );
 
-  setTimeout(finishLoader, reducedMotion ? 1800 : 4200);
+  setTimeout(finishLoader, reducedMotion ? 1200 : 2700);
 
   /* ---------------------------------------------------------
      Footer updated-date typing / clearing / retyping loop
@@ -1474,6 +1368,13 @@
     setTimeout(() => guideStart?.focus(), 80);
   };
 
+  // Safety fallback: every fresh page load gets the quick-tour card,
+  // even if the loader's load timing changes.
+  setTimeout(() => {
+    if (document.body.classList.contains("is-booting")) return;
+    if (guide?.hasAttribute("hidden")) showGuideOnce();
+  }, 3600);
+
   guideClose?.addEventListener("click", closeGuide);
   guideStart?.addEventListener("click", closeGuide);
   guide?.addEventListener("click", (event) => {
@@ -1486,7 +1387,6 @@
       closeGuide();
     }
   });
-
 
   /* ---------------------------------------------------------
      Cursor → RF field ripple
@@ -1546,6 +1446,73 @@
   updateScrollProgress();
   window.addEventListener("scroll", updateScrollProgress, { passive: true });
 
+  /* ---------------------------------------------------------
+     Private academic access
+     Note: this is a client-side privacy gate, not cryptographic
+     protection for publicly hosted PDF files.
+  --------------------------------------------------------- */
+  const privateUnlockBtn = $("#privateUnlockBtn");
+  const privateDialog = $("#privateAccessDialog");
+  const privateClose = $("#privateAccessClose");
+  const privateForm = $("#privateAccessForm");
+  const privateCode = $("#privateAccessCode");
+  const privateMessage = $("#privateAccessMessage");
+  const privateTranscripts = $("#privateTranscripts");
+
+  const PRIVATE_CODE_HASH =
+    "7969732a4f011aa438ef4c293967bcb70daf65f889ab5bdaec2f54433f2e2a34";
+
+  async function sha256Hex(text) {
+    const data = new TextEncoder().encode(text);
+    const digest = await crypto.subtle.digest("SHA-256", data);
+    return [...new Uint8Array(digest)]
+      .map((byte) => byte.toString(16).padStart(2, "0"))
+      .join("");
+  }
+
+  privateUnlockBtn?.addEventListener("click", () => {
+    privateMessage.textContent = "";
+    privateMessage.className = "private-access-message";
+    privateCode.value = "";
+    privateTranscripts.hidden = true;
+    privateDialog?.showModal();
+    setTimeout(() => privateCode?.focus(), 80);
+  });
+
+  privateClose?.addEventListener("click", () => privateDialog?.close());
+
+  privateDialog?.addEventListener("click", (event) => {
+    if (event.target === privateDialog) privateDialog.close();
+  });
+
+  privateForm?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const entered = privateCode.value.trim();
+    if (!entered) return;
+
+    privateMessage.textContent = "Verifying…";
+    privateMessage.className = "private-access-message";
+
+    try {
+      const hash = await sha256Hex(entered);
+
+      if (hash === PRIVATE_CODE_HASH) {
+        privateMessage.textContent = "Access verified.";
+        privateMessage.className = "private-access-message success";
+        privateTranscripts.hidden = false;
+        privateCode.value = "";
+      } else {
+        privateMessage.textContent = "Access code not recognised.";
+        privateMessage.className = "private-access-message error";
+        privateTranscripts.hidden = true;
+      }
+    } catch {
+      privateMessage.textContent =
+        "Verification could not be completed in this browser.";
+      privateMessage.className = "private-access-message error";
+      privateTranscripts.hidden = true;
+    }
+  });
 
   /* ---------------------------------------------------------
      Click-to-ripple RF / pond-wave field
@@ -1623,7 +1590,7 @@
           ".education-pathway",
           ".contact",
           "footer",
-          ".research-project-card"
+          ".research-project-card",
         ].join(","),
       );
 
@@ -1667,7 +1634,12 @@
         { x: -x, y: -y, a: REFLECTION_LOSS * REFLECTION_LOSS, p: 0 },
         { x: -x, y: 2 * h - y, a: REFLECTION_LOSS * REFLECTION_LOSS, p: 0 },
         { x: 2 * w - x, y: -y, a: REFLECTION_LOSS * REFLECTION_LOSS, p: 0 },
-        { x: 2 * w - x, y: 2 * h - y, a: REFLECTION_LOSS * REFLECTION_LOSS, p: 0 },
+        {
+          x: 2 * w - x,
+          y: 2 * h - y,
+          a: REFLECTION_LOSS * REFLECTION_LOSS,
+          p: 0,
+        },
       ];
     };
 
@@ -1693,7 +1665,10 @@
         }
 
         // Normalize the interference response into a visible but restrained range.
-        const interference = Math.max(-1, Math.min(1, field / Math.max(1, sources.length * 0.82)));
+        const interference = Math.max(
+          -1,
+          Math.min(1, field / Math.max(1, sources.length * 0.82)),
+        );
         const visibility = 0.28 + 0.72 * Math.abs(interference);
         const signed = interference >= 0 ? 1 : -1;
 
@@ -1740,11 +1715,7 @@
 
         // Fade in quickly, remain visible, then dissolve during the last ~1 sec.
         const lifeFade =
-          t < 0.08
-            ? t / 0.08
-            : t > 0.68
-              ? 1 - (t - 0.68) / 0.32
-              : 1;
+          t < 0.08 ? t / 0.08 : t > 0.68 ? 1 - (t - 0.68) / 0.32 : 1;
 
         // Draw the direct front; reflected fronts appear through the image-source
         // interference field below.
@@ -1754,7 +1725,12 @@
         if (radius > 40) {
           const fringeAlpha = lifeFade * 0.24;
           drawInterferingRing(wave, radius + 5, fringeAlpha, now);
-          drawInterferingRing(wave, Math.max(12, radius - 5), fringeAlpha * 0.65, now);
+          drawInterferingRing(
+            wave,
+            Math.max(12, radius - 5),
+            fringeAlpha * 0.65,
+            now,
+          );
         }
       }
 
@@ -1765,9 +1741,12 @@
 
     // Reposition the field if the document is scrolled so the wave remains
     // attached to viewport click coordinates, matching the visual pond analogy.
-    window.addEventListener("scroll", () => {
-      // Canvas is viewport-fixed; no coordinate conversion is necessary.
-    }, { passive: true });
+    window.addEventListener(
+      "scroll",
+      () => {
+        // Canvas is viewport-fixed; no coordinate conversion is necessary.
+      },
+      { passive: true },
+    );
   })();
-
 })();

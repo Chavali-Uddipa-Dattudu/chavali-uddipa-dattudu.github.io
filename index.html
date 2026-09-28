@@ -32,7 +32,17 @@
         document.documentElement.dataset.theme = savedTheme || "light";
       })();
   </script>
-<link href="style.css" rel="stylesheet"/>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L27QXPHX4L"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L27QXPHX4L');
+</script>
+<link href="style.css?v=20260928-r2" rel="stylesheet"/>
 <link href="manifest.webmanifest" rel="manifest"/>
 <script type="application/ld+json">
 {
@@ -73,32 +83,20 @@
    Skip to content
   </a>
 <div aria-hidden="true" class="site-loader" id="siteLoader">
-  <div class="loader-core">
-    <div aria-hidden="true" class="loader-signal">
-      <svg preserveAspectRatio="none" viewBox="0 0 720 120" aria-hidden="true">
-        <defs>
-          <linearGradient id="loaderGold" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stop-color="#b98828"/>
-            <stop offset="48%" stop-color="#d3a343"/>
-            <stop offset="100%" stop-color="#f0c66e"/>
-          </linearGradient>
-          <filter id="loaderGlow" x="-20%" y="-40%" width="140%" height="180%">
-            <feGaussianBlur stdDeviation="3.5" result="blur"/>
-            <feMerge>
-              <feMergeNode in="blur"/>
-              <feMergeNode in="SourceGraphic"/>
-            </feMerge>
-          </filter>
-        </defs>
-        <path class="loader-grid-line" d="M0 60H720"/>
-        <path class="loader-grid-axis" d="M0 30H720M0 90H720"/>
-        <path class="loader-signal-echo" id="loaderSignalEcho"/>
-        <path class="loader-signal-wave" id="loaderSignalPath"/>
-        <circle class="loader-signal-tip" cx="720" cy="60" r="5"/>
-        <circle class="loader-signal-ring" cx="720" cy="60" r="10"/>
-      </svg>
+  <div class="loader-core loader-rf-acquisition">
+    <div class="loader-acquisition">
+      <div class="loader-signal-track">
+        <span class="loader-signal-baseline"></span>
+        <span class="loader-signal-pulse"></span>
+      </div>
+      <div class="loader-emitter">
+        <span class="loader-emitter-point"></span>
+        <span class="loader-emitter-ring ring-a"></span>
+        <span class="loader-emitter-ring ring-b"></span>
+        <span class="loader-emitter-ring ring-c"></span>
+      </div>
     </div>
-    <p class="loader-label">Loading...</p>
+    <p class="loader-label">Loading data...</p>
   </div>
 </div>
 <div aria-hidden="true" class="site-guide-overlay" hidden="" id="siteGuide">
@@ -125,10 +123,7 @@
       CUD
      </span>
 </a>
-<button aria-controls="primary-nav" aria-expanded="false" aria-label="Open menu" class="menu-toggle">
-     ☰
-    </button>
-<nav aria-label="Primary navigation" class="nav-menu" id="primary-nav"><div class="mobile-nav-head"><span>Navigate</span><span aria-hidden="true">CUD / 09</span></div><a class="active" href="#home">Home</a><a href="#about">About</a><a href="#experience">Experience</a><a href="#projects">Projects</a><a href="#education">Education</a><a href="#achievements">Achievements</a><a href="#credentials">Credentials</a><a href="#contact">Contact</a></nav>
+<nav aria-label="Primary navigation" class="nav-menu" id="primary-nav"><a class="active" href="#home">Home</a><a href="#about">About</a><a href="#experience">Experience</a><a href="#projects">Projects</a><a href="#education">Education</a><a href="#achievements">Achievements</a><a href="#credentials">Credentials</a><a href="#contact">Contact</a></nav>
 <button aria-label="Switch to dark theme" class="theme-toggle" id="themeToggle" title="Switch light and dark theme" type="button">
 <svg aria-hidden="true" class="not-gate-icon" viewbox="0 0 36 24">
 <path class="not-gate-line" d="M2 12H9"></path>
@@ -330,7 +325,6 @@
           </span>
 </div>
 </div>
-</div>
 <div class="technical-focus reveal">
 <div class="technical-focus-heading">
 <p class="eyebrow">Technical Focus</p>
@@ -347,13 +341,8 @@
 </div>
 </div>
 <aside class="about-side"><div class="about-side-intro reveal"><h3>Beyond the schematic</h3><p>Technical interests, communication and research direction.</p></div><div class="about-side-grid">
-<article class="about-extra-card reveal spotlight-card"><h3>Languages</h3><ul class="language-list simple-language-list"><li><strong>Telugu</strong></li><li><strong>English</strong></li><li><strong>Hindi</strong></li></ul></article>
-<article class="about-extra-card interests-card reveal spotlight-card"><h3>
-           Interests
-          </h3><div class="interest-tags"><span>Space Technology</span><span>Semiconductor Technology</span><span>Electronics &amp; Embedded Systems</span><span>Science &amp; Technology History</span></div></article>
-<article class="about-extra-card research-card reveal spotlight-card"><h3>
-           Research interests
-          </h3><div class="interest-tags"><span>RFIC / RF CMOS</span><span>Analog CMOS</span><span>Mixed-Signal ICs</span><span>CMOS Image Sensors</span><span>Microwave Engineering &amp; Antennas</span><span>Biomedical RF / Microwave Imaging</span><span>EDA Automation</span></div></article>
+<article class="about-extra-card languages-card reveal spotlight-card"><h3>Languages</h3><ul class="language-list simple-language-list"><li><strong>Telugu</strong></li><li><strong>English</strong></li><li><strong>Hindi</strong></li></ul></article>
+<article class="about-extra-card interests-card reveal spotlight-card"><h3>Interests &amp; Research</h3><div class="interest-tags"><span>VLSI Design</span><span>RF CMOS IC Design</span><span>Analog CMOS</span><span>Mixed-Signal ICs</span><span>CMOS Image Sensors</span><span>Microwave Engineering &amp; Antennas</span><span>Biomedical RF / Microwave Imaging</span><span>Quantum Technology</span><span>EDA Automation</span><span>Space Technology</span><span>Semiconductor Technology</span><span>Electronics &amp; Embedded Systems</span><span>Science &amp; Technology History</span></div></article>
 </div></aside></div>
 </div>
 </section>
@@ -834,7 +823,23 @@
 <div class="research-project-block research-detail-only"><strong>Current work</strong><ul class="research-project-list"><li>Antenna modeling in Ansys HFSS</li><li>S-parameter / impedance analysis</li><li>Biological tissue modeling</li><li>E-field analysis</li><li>SAR evaluation</li><li>HFSS meshing and field post-processing</li></ul></div>
 <div class="research-project-status research-detail-only"><strong>Current status</strong><span>Ongoing</span></div>
 </div>
-</article></div>
+</article>
+<article class="project-card coming-soon-card reveal" data-category="rfic analog eda pcb">
+<div class="coming-soon-visual" aria-hidden="true">
+  <span class="coming-soon-orbit orbit-one"></span>
+  <span class="coming-soon-orbit orbit-two"></span>
+  <span class="coming-soon-orbit orbit-three"></span>
+  <span class="coming-soon-core"></span>
+  <span class="coming-soon-sweep"></span>
+</div>
+<div class="project-info coming-soon-info">
+<div class="project-meta"><span>PORTFOLIO PIPELINE</span><span>2026 →</span></div>
+<h3>More Projects Coming Soon</h3>
+<p class="project-summary">More circuit design, RF/microwave and EDA work will be added as the projects reach a stage worth presenting.</p>
+<div class="coming-soon-status"><span></span>Next project in development</div>
+</div>
+</article>
+</div>
 </div>
 </section>
 <section class="section education" id="education">
@@ -1130,6 +1135,20 @@
 </div>
 </div>
 </section>
+<section class="summary-section" aria-labelledby="summaryTitle">
+<div class="container">
+<div class="summary-card reveal spotlight-card">
+<div class="summary-label">
+<span aria-hidden="true"></span>
+<p class="eyebrow">Profile Summary</p>
+</div>
+<h2 id="summaryTitle">A practical path toward semiconductor design.</h2>
+<p>
+I am an Electronics and Communication Engineering undergraduate building my skills around VLSI design, RF CMOS IC design and analog and mixed-signal circuits. Through research internships and hands-on projects, I have worked with transistor-level simulation, RF front-end design, memory circuits, PCB design and Ansys HFSS. I also use Python and EDA automation to make repetitive design and analysis work faster and more reliable. My current interests are moving toward deeper semiconductor research, microwave engineering and the connection between RF, electronics and emerging quantum technologies.
+</p>
+</div>
+</div>
+</section>
 <section class="contact" id="contact">
 <div class="container">
 <div class="contact-inner reveal">
@@ -1224,7 +1243,7 @@
 <p class="lightbox-caption sr-only" id="lightboxCaption">
 </p>
 </dialog>
-<script defer="" src="script.js">
+<script defer="" src="script.js?v=20260928-r1">
 </script>
 </body>
 </html>
