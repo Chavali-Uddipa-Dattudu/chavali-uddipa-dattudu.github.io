@@ -48,6 +48,7 @@
   const header = $(".site-header");
   const navLinks = $$("#primary-nav a");
 
+
   const updateHeader = () => {
     header?.classList.toggle("is-scrolled", window.scrollY > 12);
   };
@@ -623,14 +624,12 @@
   };
 
   compactAchievementCards();
-  $$(".project-card:not(.coming-soon-card), .achievement-card").forEach(
-    (card) => {
-      card.tabIndex = 0;
-      card.setAttribute("role", "button");
-      const title = card.querySelector("h3")?.textContent.trim() || "details";
-      card.setAttribute("aria-label", `Open ${title}`);
-    },
-  );
+  $$(".project-card:not(.coming-soon-card), .achievement-card").forEach((card) => {
+    card.tabIndex = 0;
+    card.setAttribute("role", "button");
+    const title = card.querySelector("h3")?.textContent.trim() || "details";
+    card.setAttribute("aria-label", `Open ${title}`);
+  });
 
   document.addEventListener("click", (event) => {
     const readMore = event.target.closest(".achievement-readmore");
@@ -646,9 +645,7 @@
 
     if (event.target.closest(".detail-modal")) return;
 
-    const projectCard = event.target.closest(
-      ".project-card:not(.coming-soon-card)",
-    );
+    const projectCard = event.target.closest(".project-card:not(.coming-soon-card)");
     if (projectCard && !event.target.closest("a, button, summary, details")) {
       openDetailModal(projectCard);
       return;
@@ -1388,6 +1385,7 @@
     }
   });
 
+
   /* ---------------------------------------------------------
      Cursor → RF field ripple
   --------------------------------------------------------- */
@@ -1459,8 +1457,7 @@
   const privateMessage = $("#privateAccessMessage");
   const privateTranscripts = $("#privateTranscripts");
 
-  const PRIVATE_CODE_HASH =
-    "7969732a4f011aa438ef4c293967bcb70daf65f889ab5bdaec2f54433f2e2a34";
+  const PRIVATE_CODE_HASH = "7969732a4f011aa438ef4c293967bcb70daf65f889ab5bdaec2f54433f2e2a34";
 
   async function sha256Hex(text) {
     const data = new TextEncoder().encode(text);
@@ -1507,12 +1504,12 @@
         privateTranscripts.hidden = true;
       }
     } catch {
-      privateMessage.textContent =
-        "Verification could not be completed in this browser.";
+      privateMessage.textContent = "Verification could not be completed in this browser.";
       privateMessage.className = "private-access-message error";
       privateTranscripts.hidden = true;
     }
   });
+
 
   /* ---------------------------------------------------------
      Click-to-ripple RF / pond-wave field
@@ -1590,7 +1587,7 @@
           ".education-pathway",
           ".contact",
           "footer",
-          ".research-project-card",
+          ".research-project-card"
         ].join(","),
       );
 
@@ -1634,12 +1631,7 @@
         { x: -x, y: -y, a: REFLECTION_LOSS * REFLECTION_LOSS, p: 0 },
         { x: -x, y: 2 * h - y, a: REFLECTION_LOSS * REFLECTION_LOSS, p: 0 },
         { x: 2 * w - x, y: -y, a: REFLECTION_LOSS * REFLECTION_LOSS, p: 0 },
-        {
-          x: 2 * w - x,
-          y: 2 * h - y,
-          a: REFLECTION_LOSS * REFLECTION_LOSS,
-          p: 0,
-        },
+        { x: 2 * w - x, y: 2 * h - y, a: REFLECTION_LOSS * REFLECTION_LOSS, p: 0 },
       ];
     };
 
@@ -1665,10 +1657,7 @@
         }
 
         // Normalize the interference response into a visible but restrained range.
-        const interference = Math.max(
-          -1,
-          Math.min(1, field / Math.max(1, sources.length * 0.82)),
-        );
+        const interference = Math.max(-1, Math.min(1, field / Math.max(1, sources.length * 0.82)));
         const visibility = 0.28 + 0.72 * Math.abs(interference);
         const signed = interference >= 0 ? 1 : -1;
 
@@ -1715,7 +1704,11 @@
 
         // Fade in quickly, remain visible, then dissolve during the last ~1 sec.
         const lifeFade =
-          t < 0.08 ? t / 0.08 : t > 0.68 ? 1 - (t - 0.68) / 0.32 : 1;
+          t < 0.08
+            ? t / 0.08
+            : t > 0.68
+              ? 1 - (t - 0.68) / 0.32
+              : 1;
 
         // Draw the direct front; reflected fronts appear through the image-source
         // interference field below.
@@ -1725,12 +1718,7 @@
         if (radius > 40) {
           const fringeAlpha = lifeFade * 0.24;
           drawInterferingRing(wave, radius + 5, fringeAlpha, now);
-          drawInterferingRing(
-            wave,
-            Math.max(12, radius - 5),
-            fringeAlpha * 0.65,
-            now,
-          );
+          drawInterferingRing(wave, Math.max(12, radius - 5), fringeAlpha * 0.65, now);
         }
       }
 
@@ -1741,12 +1729,9 @@
 
     // Reposition the field if the document is scrolled so the wave remains
     // attached to viewport click coordinates, matching the visual pond analogy.
-    window.addEventListener(
-      "scroll",
-      () => {
-        // Canvas is viewport-fixed; no coordinate conversion is necessary.
-      },
-      { passive: true },
-    );
+    window.addEventListener("scroll", () => {
+      // Canvas is viewport-fixed; no coordinate conversion is necessary.
+    }, { passive: true });
   })();
+
 })();
