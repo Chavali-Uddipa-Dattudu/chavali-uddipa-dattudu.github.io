@@ -5191,3 +5191,128 @@ body {
   overflow-x: clip;
 }
 \n\n/* ============================================================\n   FINAL ABOUT LAYOUT FIX — 2026-09-28\n   The latest HTML had .about-side accidentally nested inside\n   .about-copy, preventing .about-grid from ever using its two\n   columns. These rules define the intended desktop layout and\n   keep the right-side content compact.\n   ============================================================ */\n@media (min-width: 760px) {\n  #about > .container > .about-grid {\n    display: grid !important;\n    grid-template-columns: minmax(0, 1.06fr) minmax(320px, 0.94fr) !important;\n    column-gap: clamp(28px, 4vw, 58px) !important;\n    align-items: start !important;\n  }\n\n  #about > .container > .about-grid > .about-copy {\n    min-width: 0 !important;\n  }\n\n  #about > .container > .about-grid > .about-side {\n    min-width: 0 !important;\n    margin-top: 0 !important;\n  }\n\n  #about .about-side-grid {\n    display: grid !important;\n    grid-template-columns: minmax(110px, 0.42fr) minmax(0, 1.58fr) !important;\n    gap: 12px !important;\n  }\n\n  #about .about-extra-card {\n    min-width: 0 !important;\n  }\n\n  #about .interests-card .interest-tags {\n    display: flex;\n    flex-wrap: wrap;\n    gap: 6px;\n  }\n\n  #about .interests-card .interest-tags span {\n    padding: 5px 7px;\n    font-size: 9px;\n  }\n}\n\n@media (max-width: 759px) {\n  #about > .container > .about-grid {\n    grid-template-columns: 1fr !important;\n  }\n  #about > .container > .about-grid > .about-side {\n    margin-top: 14px !important;\n  }\n  #about .about-side-grid {\n    grid-template-columns: 1fr !important;\n  }\n}\n
+
+/* ============================================================
+   FINAL LAYOUT UPDATE — 2026-09-30
+   - Widen Technical Profile + Technical Focus across the full
+     About section.
+   - Use the available horizontal space instead of leaving a
+     large blank area.
+   - Keep the bottom copyright/update bar persistent like the
+     fixed navigation header.
+   ============================================================ */
+
+body {
+  padding-bottom: 58px !important;
+}
+
+@media (min-width: 760px) {
+  #about > .container > .about-grid {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1.06fr) minmax(360px, 0.94fr) !important;
+    column-gap: clamp(28px, 4vw, 58px) !important;
+    row-gap: 24px !important;
+    align-items: start !important;
+  }
+
+  #about > .container > .about-grid > .about-copy {
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+    min-width: 0 !important;
+  }
+
+  #about > .container > .about-grid > .about-side {
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+    min-width: 0 !important;
+    margin-top: 0 !important;
+  }
+
+  #about > .container > .about-grid > .about-facts {
+    grid-column: 1 / -1 !important;
+    grid-row: 2 !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.15fr) !important;
+    gap: 16px !important;
+    width: 100% !important;
+    margin-top: 0 !important;
+    align-items: stretch !important;
+  }
+
+  #about .about-facts > .technical-profile,
+  #about .about-facts > .technical-focus {
+    width: 100% !important;
+    min-width: 0 !important;
+    margin-top: 0 !important;
+    height: 100% !important;
+  }
+
+  #about .technical-focus {
+    padding: 18px !important;
+  }
+
+  #about .technical-focus-grid {
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 759px) {
+  #about > .container > .about-grid {
+    grid-template-columns: 1fr !important;
+    row-gap: 14px !important;
+  }
+
+  #about > .container > .about-grid > .about-copy,
+  #about > .container > .about-grid > .about-side,
+  #about > .container > .about-grid > .about-facts {
+    grid-column: 1 !important;
+    grid-row: auto !important;
+  }
+
+  #about > .container > .about-grid > .about-facts {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+    width: 100% !important;
+  }
+}
+
+/* Persistent bottom status bar */
+footer {
+  position: fixed !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 58px !important;
+  z-index: 1100 !important;
+  border-top: 1px solid var(--line) !important;
+  background: color-mix(in srgb, var(--surface) 92%, transparent) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  box-shadow: 0 -10px 28px rgba(79, 59, 37, 0.06) !important;
+}
+
+html[data-theme="dark"] footer {
+  box-shadow: 0 -10px 28px rgba(0, 0, 0, 0.24) !important;
+}
+
+footer .footer-inner {
+  min-height: 58px !important;
+  height: 58px !important;
+}
+
+@media (max-width: 760px) {
+  body {
+    padding-bottom: 66px !important;
+  }
+
+  footer {
+    height: 66px !important;
+  }
+
+  footer .footer-inner {
+    min-height: 66px !important;
+    height: 66px !important;
+  }
+}

@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 
 <html lang="en">
 <head>
@@ -32,9 +33,8 @@
         document.documentElement.dataset.theme = savedTheme || "light";
       })();
   </script>
-
 <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-L27QXPHX4L"></script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-L27QXPHX4L"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
@@ -42,7 +42,7 @@
 
   gtag('config', 'G-L27QXPHX4L');
 </script>
-<link href="style.css?v=20260928-r3" rel="stylesheet"/>
+<link href="style.css?v=20260930-r4" rel="stylesheet"/>
 <link href="manifest.webmanifest" rel="manifest"/>
 <script type="application/ld+json">
 {
@@ -78,26 +78,26 @@
 </script>
 <meta content="Chavali Uddipa Dattudu — VLSI, RFIC and Analog IC Design Portfolio" property="og:image:alt"/></head>
 <body class="is-booting">
-<canvas id="rfWaveCanvas" class="rf-wave-canvas" aria-hidden="true"></canvas>
+<canvas aria-hidden="true" class="rf-wave-canvas" id="rfWaveCanvas"></canvas>
 <a class="skip-link" href="#main">
    Skip to content
   </a>
 <div aria-hidden="true" class="site-loader" id="siteLoader">
-  <div class="loader-core loader-rf-acquisition">
-    <div class="loader-acquisition">
-      <div class="loader-signal-track">
-        <span class="loader-signal-baseline"></span>
-        <span class="loader-signal-pulse"></span>
-      </div>
-      <div class="loader-emitter">
-        <span class="loader-emitter-point"></span>
-        <span class="loader-emitter-ring ring-a"></span>
-        <span class="loader-emitter-ring ring-b"></span>
-        <span class="loader-emitter-ring ring-c"></span>
-      </div>
-    </div>
-    <p class="loader-label">Loading data...</p>
-  </div>
+<div class="loader-core loader-rf-acquisition">
+<div class="loader-acquisition">
+<div class="loader-signal-track">
+<span class="loader-signal-baseline"></span>
+<span class="loader-signal-pulse"></span>
+</div>
+<div class="loader-emitter">
+<span class="loader-emitter-point"></span>
+<span class="loader-emitter-ring ring-a"></span>
+<span class="loader-emitter-ring ring-b"></span>
+<span class="loader-emitter-ring ring-c"></span>
+</div>
+</div>
+<p class="loader-label">Loading data...</p>
+</div>
 </div>
 <div aria-hidden="true" class="site-guide-overlay" hidden="" id="siteGuide">
 <section aria-labelledby="siteGuideTitle" aria-modal="true" class="site-guide" role="dialog">
@@ -134,8 +134,8 @@
 </svg>
 <span class="sr-only" id="themeToggleText">Switch to dark theme</span>
 <span aria-hidden="true" class="theme-symbols">
-  <span class="theme-moon" id="themeMoon">☾</span>
-  <span class="theme-sun" id="themeSun">☀</span>
+<span class="theme-moon" id="themeMoon">☾</span>
+<span class="theme-sun" id="themeSun">☀</span>
 </span>
 </button>
 </div>
@@ -266,6 +266,7 @@
 <section class="section" id="about">
 <div class="container">
 <div class="about-grid">
+
 <div class="about-copy">
 <div class="section-heading reveal">
 <p class="eyebrow">
@@ -287,7 +288,11 @@
 <p>
         I am particularly interested in semiconductor design where device physics, circuit architecture and simulation discipline meet.
        </p>
-<div class="about-facts">
+
+</div><aside class="about-side"><div class="about-side-intro reveal"><h3>Beyond the schematic</h3><p>Technical interests, communication and research direction.</p></div><div class="about-side-grid">
+<article class="about-extra-card languages-card reveal spotlight-card"><h3>Languages</h3><ul class="language-list simple-language-list"><li><strong>Telugu</strong></li><li><strong>English</strong></li><li><strong>Hindi</strong></li></ul></article>
+<article class="about-extra-card interests-card reveal spotlight-card"><h3>Interests &amp; Research</h3><div class="interest-tags"><span>VLSI Design</span><span>RF CMOS IC Design</span><span>Analog CMOS</span><span>Mixed-Signal ICs</span><span>CMOS Image Sensors</span><span>Microwave Engineering &amp; Antennas</span><span>Biomedical RF / Microwave Imaging</span><span>Quantum Technology</span><span>EDA Automation</span><span>Space Technology</span><span>Semiconductor Technology</span><span>Electronics &amp; Embedded Systems</span><span>Science &amp; Technology History</span></div></article>
+</div></aside><div class="about-facts">
 <div class="technical-profile reveal spotlight-card">
 <h3>
           Technical profile
@@ -339,12 +344,7 @@
 <article class="technical-focus-cell"><strong>Hardware</strong><span>PCB design · practical electronics</span></article>
 </div>
 </div>
-</div>
-</div>
-<aside class="about-side"><div class="about-side-intro reveal"><h3>Beyond the schematic</h3><p>Technical interests, communication and research direction.</p></div><div class="about-side-grid">
-<article class="about-extra-card languages-card reveal spotlight-card"><h3>Languages</h3><ul class="language-list simple-language-list"><li><strong>Telugu</strong></li><li><strong>English</strong></li><li><strong>Hindi</strong></li></ul></article>
-<article class="about-extra-card interests-card reveal spotlight-card"><h3>Interests &amp; Research</h3><div class="interest-tags"><span>VLSI Design</span><span>RF CMOS IC Design</span><span>Analog CMOS</span><span>Mixed-Signal ICs</span><span>CMOS Image Sensors</span><span>Microwave Engineering &amp; Antennas</span><span>Biomedical RF / Microwave Imaging</span><span>Quantum Technology</span><span>EDA Automation</span><span>Space Technology</span><span>Semiconductor Technology</span><span>Electronics &amp; Embedded Systems</span><span>Science &amp; Technology History</span></div></article>
-</div></aside></div>
+</div></div>
 </div>
 </section>
 <section class="section tint" id="experience">
@@ -382,9 +382,7 @@
          Analog IC Design for CMOS Image Sensors
         </h4>
 <ul class="experience-points">
-<li>
-          Collaborating on Programmable Gain Amplifiers (PGAs) and Single-Slope ADCs for CMOS camera image sensors.
-         </li>
+<li>Currently working on the development of an Operational Transconductance Amplifier (OTA) for the Programmable Gain Amplifier (PGA) sub-block of the ADC used in CMOS image sensors.</li>
 <li>
           Performing transistor-level modeling and simulation of converter blocks to study gain, noise and power.
          </li>
@@ -812,13 +810,13 @@
 </article>
 <article class="project-card research-project-card reveal spotlight-card" data-category="rfic">
 <div class="research-project-visual">
-<span class="research-learning-mark" aria-hidden="true">HFSS</span>
+<span aria-hidden="true" class="research-learning-mark">HFSS</span>
 <span aria-hidden="true" class="research-project-pulse"></span>
 <span class="research-project-image-label">SAR SIMULATION · LEARNING</span>
 </div>
 <div class="project-info">
 <div class="project-meta"><span>RF / Microwave Learning</span><span>Ansys HFSS</span></div>
-<div class="research-live-status"><span class="research-live-dot" aria-hidden="true"></span><strong>LEARNING</strong><span>Current HFSS practice</span></div>
+<div class="research-live-status"><span aria-hidden="true" class="research-live-dot"></span><strong>LEARNING</strong><span>Current HFSS practice</span></div>
 <h3>Learning SAR Simulations in HFSS</h3>
 <div class="research-project-block"><strong>Focus</strong><p>Learning the setup and analysis workflow for Specific Absorption Rate (SAR) simulations in Ansys HFSS.</p></div>
 <div class="research-project-block research-detail-only"><strong>Current learning</strong><ul class="research-project-list"><li>HFSS model setup and simulation workflow</li><li>Meshing and solver configuration</li><li>E-field and power-loss analysis</li><li>SAR calculation and visualization</li><li>Understanding simulation results and post-processing</li></ul></div>
@@ -826,12 +824,12 @@
 </div>
 </article>
 <article class="project-card coming-soon-card reveal" data-category="rfic analog eda pcb">
-<div class="coming-soon-visual" aria-hidden="true">
-  <span class="coming-soon-orbit orbit-one"></span>
-  <span class="coming-soon-orbit orbit-two"></span>
-  <span class="coming-soon-orbit orbit-three"></span>
-  <span class="coming-soon-core"></span>
-  <span class="coming-soon-sweep"></span>
+<div aria-hidden="true" class="coming-soon-visual">
+<span class="coming-soon-orbit orbit-one"></span>
+<span class="coming-soon-orbit orbit-two"></span>
+<span class="coming-soon-orbit orbit-three"></span>
+<span class="coming-soon-core"></span>
+<span class="coming-soon-sweep"></span>
 </div>
 <div class="project-info coming-soon-info">
 <div class="project-meta"><span>PORTFOLIO PIPELINE</span><span>2026 →</span></div>
@@ -934,7 +932,7 @@
       </p>
 </div>
 <div class="achievement-grid">
-<article class="achievement-card featured-achievement reveal spotlight-card"><div class="achievement-evidence-grid"><img alt="Innovation Nexus 2026 Hackathon award presentation" class="lightbox-img" decoding="async" height="700" loading="lazy" src="images/achievements/innovation-nexus1.webp" width="1280"/><img alt="Innovation Nexus 2026 Hackathon team award" class="lightbox-img" decoding="async" height="1037" loading="lazy" src="images/achievements/innovation-nexus2.webp" width="1357"/></div><div class="achievement-body"><div class="achievement-topline"><span>1st Prize · ₹25,000</span><time datetime="2026-08">Aug 2026</time></div><h3>Innovation Nexus 2026 Hackathon</h3><p><strong>MITS ECE Department &amp; PathVision Innovations Pvt Ltd</strong></p><p>Won 1st Prize and a ₹25,000 cash award with Team Tech Vision for a real-time agricultural transport condition monitoring system.</p><p>Led the complete Edge IoT and hardware architecture, including ESP32 processing, multi-modal sensing and the telemetry/data-ingestion pipeline.</p></div></article><article class="achievement-card reveal spotlight-card"><img alt="Second position Circuit Detective ECLECTICA 2K26" class="lightbox-img" decoding="async" height="480" loading="lazy" src="images/achievements/circuit-detective-eclectica2k26.webp" width="371"/><div><div class="achievement-topline"><span>2nd Position</span><time datetime="2026-04">Apr 2026</time></div><h3>Circuit Detective — ECLECTICA 2K26</h3><p><strong>Department of Electronics and Communication Engineering, MITS</strong></p><p>Secured 2nd position in a hardware debugging event during the One-Day National Level Technical Symposium, awarded for technical proficiency in circuit analysis.</p></div></article><article class="achievement-card reveal spotlight-card"><img alt="Academic excellence award diploma fifth semester" class="lightbox-img" decoding="async" height="853" loading="lazy" src="images/achievements/Academic-Excellence-Award-(Diploma-5th-Semester).webp" width="1280"/><div><div class="achievement-topline"><span>Academic Excellence</span><time datetime="2025-05">May 2025</time></div><h3>5th Semester Academic Excellence</h3><p><strong>ESC Government Polytechnic College</strong></p><p>Awarded a wooden memento and merit certificate for outstanding performance in the 5th-semester Diploma examinations.</p></div></article><article class="achievement-card reveal spotlight-card"><img alt="First prize Circuit Hunt" class="lightbox-img" decoding="async" height="1326" loading="lazy" src="images/achievements/1st%20Prize-CircuitHunt.webp" width="2122"/><div><div class="achievement-topline"><span>1st Prize</span><time datetime="2024-11">Nov 2024</time></div><h3>Circuit Hunt</h3><p><strong>JNTUACEA · E-Merge 2K24</strong></p><p>Won 1st prize in the Circuit Hunt technical event at the National Level Technical Symposium.</p><p>The Circuit Hunt and Technical Quiz victories together earned a total ₹2,000 cash prize.</p></div></article><article class="achievement-card reveal spotlight-card"><img alt="First prize technical quiz" class="lightbox-img" decoding="async" height="1268" loading="lazy" src="images/achievements/1st%20Prize-TechnicalQuiz.webp" width="2050"/><div><div class="achievement-topline"><span>1st Prize</span><time datetime="2024-11">Nov 2024</time></div><h3>Technical Quiz</h3><p><strong>JNTUACEA · E-Merge 2K24</strong></p><p>Won 1st prize in the Technical Quiz at the National Level Technical Symposium as part of a team.</p><p>The Circuit Hunt and Technical Quiz victories together earned a total ₹2,000 cash prize.</p></div></article><article class="achievement-card reveal spotlight-card"><img alt="Academic excellence award diploma fourth semester" class="lightbox-img" decoding="async" height="572" loading="lazy" src="images/achievements/Academic-Excellence-Reward-(Diploma-4th-Semester).webp" width="1040"/><div><div class="achievement-topline"><span>Academic Excellence</span><time datetime="2024-11">Nov 2024</time></div><h3>4th Semester Academic Excellence</h3><p><strong>ESC Government Polytechnic College · SBTET Andhra Pradesh</strong></p><p>Recognized for outstanding academic performance in the 4th-semester Diploma examinations and awarded an academic reward.</p></div></article><article class="achievement-card reveal spotlight-card"><img alt="First prize paper presentation" class="lightbox-img" decoding="async" height="4291" loading="lazy" src="images/achievements/1stPrizePaperPresentationRGM.webp" width="8192"/><div><div class="achievement-topline"><span>1st Prize · ₹1,000</span><time datetime="2024-03">Mar 2024</time></div><h3>Paper Presentation — PRAVAHA</h3><p><strong>RGM College of Engineering, Nandyal · Ripple 2K24</strong></p><p>Secured 1st place in the paper presentation competition at the National Level Technical Symposium and received a ₹1,000 cash prize for research presentation and technical communication.</p></div></article><article class="achievement-card achievement-group-card reveal spotlight-card"><div class="achievement-evidence-grid"><img alt="Academic excellence award first year third semester" class="lightbox-img" decoding="async" height="577" loading="lazy" src="images/achievements/Academic-Excellence-Reward-(1st-Year&amp;3rd-Semester)1.webp" width="1164"/><img alt="Academic excellence award first year third semester second photo" class="lightbox-img" decoding="async" height="2352" loading="lazy" src="images/achievements/Academic-Excellence-Reward-(1st-Year&amp;3rd-Semester)2.webp" width="3547"/></div><div class="achievement-body"><div class="achievement-topline"><span>Academic Excellence</span><time datetime="2024-01">Jan 2024</time></div><h3>Academic Excellence — 1st Year &amp; 3rd Semester</h3><p><strong>ESC Government Polytechnic College</strong></p><p>Recognized for outstanding academic performance during the 1st year and 3rd-semester Diploma examinations.</p><p>Received a ₹2,000 cash prize, a French Crown pen and the <em>Integrated Electronics</em> textbook.</p></div></article><article hidden class="achievement-card reveal more-card spotlight-card"><img alt="First place August quiz competition" class="lightbox-img" decoding="async" height="484" loading="lazy" src="images/achievements/1st-Place-August-Quiz-Competition.webp" width="819"/><div><div class="achievement-topline"><span>1st Place</span><time datetime="2023-08">Aug 2023</time></div><h3>Independence Day Quiz</h3><p><strong>ESC Government Polytechnic College</strong></p><p>Won the college-wide quiz competition conducted on Independence Day, 15 August 2023.</p></div></article><article hidden class="achievement-card reveal more-card spotlight-card"><img alt="Second place January quiz competition" class="lightbox-img" decoding="async" height="1200" loading="lazy" src="images/achievements/2nd-Place-January-Quiz-Competition.webp" width="1600"/><div><div class="achievement-topline"><span>2nd Place</span><time datetime="2023-01">Jan 2023</time></div><h3>Republic Day Quiz</h3><p><strong>ESC Government Polytechnic College</strong></p><p>Secured 2nd prize in the college-wide Republic Day quiz during the first year of the Diploma and received a memento.</p></div></article></div>
+<article class="achievement-card featured-achievement reveal spotlight-card"><div class="achievement-evidence-grid"><img alt="Innovation Nexus 2026 Hackathon award presentation" class="lightbox-img" decoding="async" height="700" loading="lazy" src="images/achievements/innovation-nexus1.webp" width="1280"/><img alt="Innovation Nexus 2026 Hackathon team award" class="lightbox-img" decoding="async" height="1037" loading="lazy" src="images/achievements/innovation-nexus2.webp" width="1357"/></div><div class="achievement-body"><div class="achievement-topline"><span>1st Prize · ₹25,000</span><time datetime="2026-08">Aug 2026</time></div><h3>Innovation Nexus 2026 Hackathon</h3><p><strong>MITS ECE Department &amp; PathVision Innovations Pvt Ltd</strong></p><p>Won 1st Prize and a ₹25,000 cash award with Team Tech Vision for a real-time agricultural transport condition monitoring system.</p><p>Led the complete Edge IoT and hardware architecture, including ESP32 processing, multi-modal sensing and the telemetry/data-ingestion pipeline.</p></div></article><article class="achievement-card reveal spotlight-card"><img alt="Second position Circuit Detective ECLECTICA 2K26" class="lightbox-img" decoding="async" height="480" loading="lazy" src="images/achievements/circuit-detective-eclectica2k26.webp" width="371"/><div><div class="achievement-topline"><span>2nd Position</span><time datetime="2026-04">Apr 2026</time></div><h3>Circuit Detective — ECLECTICA 2K26</h3><p><strong>Department of Electronics and Communication Engineering, MITS</strong></p><p>Secured 2nd position in a hardware debugging event during the One-Day National Level Technical Symposium, awarded for technical proficiency in circuit analysis.</p></div></article><article class="achievement-card reveal spotlight-card"><img alt="Academic excellence award diploma fifth semester" class="lightbox-img" decoding="async" height="853" loading="lazy" src="images/achievements/Academic-Excellence-Award-(Diploma-5th-Semester).webp" width="1280"/><div><div class="achievement-topline"><span>Academic Excellence</span><time datetime="2025-05">May 2025</time></div><h3>5th Semester Academic Excellence</h3><p><strong>ESC Government Polytechnic College</strong></p><p>Awarded a wooden memento and merit certificate for outstanding performance in the 5th-semester Diploma examinations.</p></div></article><article class="achievement-card reveal spotlight-card"><img alt="First prize Circuit Hunt" class="lightbox-img" decoding="async" height="1326" loading="lazy" src="images/achievements/1st%20Prize-CircuitHunt.webp" width="2122"/><div><div class="achievement-topline"><span>1st Prize</span><time datetime="2024-11">Nov 2024</time></div><h3>Circuit Hunt</h3><p><strong>JNTUACEA · E-Merge 2K24</strong></p><p>Won 1st prize in the Circuit Hunt technical event at the National Level Technical Symposium.</p><p>The Circuit Hunt and Technical Quiz victories together earned a total ₹2,000 cash prize.</p></div></article><article class="achievement-card reveal spotlight-card"><img alt="First prize technical quiz" class="lightbox-img" decoding="async" height="1268" loading="lazy" src="images/achievements/1st%20Prize-TechnicalQuiz.webp" width="2050"/><div><div class="achievement-topline"><span>1st Prize</span><time datetime="2024-11">Nov 2024</time></div><h3>Technical Quiz</h3><p><strong>JNTUACEA · E-Merge 2K24</strong></p><p>Won 1st prize in the Technical Quiz at the National Level Technical Symposium as part of a team.</p><p>The Circuit Hunt and Technical Quiz victories together earned a total ₹2,000 cash prize.</p></div></article><article class="achievement-card reveal spotlight-card"><img alt="Academic excellence award diploma fourth semester" class="lightbox-img" decoding="async" height="572" loading="lazy" src="images/achievements/Academic-Excellence-Reward-(Diploma-4th-Semester).webp" width="1040"/><div><div class="achievement-topline"><span>Academic Excellence</span><time datetime="2024-11">Nov 2024</time></div><h3>4th Semester Academic Excellence</h3><p><strong>ESC Government Polytechnic College · SBTET Andhra Pradesh</strong></p><p>Recognized for outstanding academic performance in the 4th-semester Diploma examinations and awarded an academic reward.</p></div></article><article class="achievement-card reveal spotlight-card"><img alt="First prize paper presentation" class="lightbox-img" decoding="async" height="4291" loading="lazy" src="images/achievements/1stPrizePaperPresentationRGM.webp" width="8192"/><div><div class="achievement-topline"><span>1st Prize · ₹1,000</span><time datetime="2024-03">Mar 2024</time></div><h3>Paper Presentation — PRAVAHA</h3><p><strong>RGM College of Engineering, Nandyal · Ripple 2K24</strong></p><p>Secured 1st place in the paper presentation competition at the National Level Technical Symposium and received a ₹1,000 cash prize for research presentation and technical communication.</p></div></article><article class="achievement-card achievement-group-card reveal spotlight-card"><div class="achievement-evidence-grid"><img alt="Academic excellence award first year third semester" class="lightbox-img" decoding="async" height="577" loading="lazy" src="images/achievements/Academic-Excellence-Reward-(1st-Year&amp;3rd-Semester)1.webp" width="1164"/><img alt="Academic excellence award first year third semester second photo" class="lightbox-img" decoding="async" height="2352" loading="lazy" src="images/achievements/Academic-Excellence-Reward-(1st-Year&amp;3rd-Semester)2.webp" width="3547"/></div><div class="achievement-body"><div class="achievement-topline"><span>Academic Excellence</span><time datetime="2024-01">Jan 2024</time></div><h3>Academic Excellence — 1st Year &amp; 3rd Semester</h3><p><strong>ESC Government Polytechnic College</strong></p><p>Recognized for outstanding academic performance during the 1st year and 3rd-semester Diploma examinations.</p><p>Received a ₹2,000 cash prize, a French Crown pen and the <em>Integrated Electronics</em> textbook.</p></div></article><article class="achievement-card reveal more-card spotlight-card" hidden=""><img alt="First place August quiz competition" class="lightbox-img" decoding="async" height="484" loading="lazy" src="images/achievements/1st-Place-August-Quiz-Competition.webp" width="819"/><div><div class="achievement-topline"><span>1st Place</span><time datetime="2023-08">Aug 2023</time></div><h3>Independence Day Quiz</h3><p><strong>ESC Government Polytechnic College</strong></p><p>Won the college-wide quiz competition conducted on Independence Day, 15 August 2023.</p></div></article><article class="achievement-card reveal more-card spotlight-card" hidden=""><img alt="Second place January quiz competition" class="lightbox-img" decoding="async" height="1200" loading="lazy" src="images/achievements/2nd-Place-January-Quiz-Competition.webp" width="1600"/><div><div class="achievement-topline"><span>2nd Place</span><time datetime="2023-01">Jan 2023</time></div><h3>Republic Day Quiz</h3><p><strong>ESC Government Polytechnic College</strong></p><p>Secured 2nd prize in the college-wide Republic Day quiz during the first year of the Diploma and received a memento.</p></div></article></div>
 <button aria-expanded="false" class="show-more-btn" id="achievementsToggle">View more achievements ↓</button>
 </div>
 </section><section class="section tint" id="credentials">
@@ -1136,7 +1134,7 @@
 </div>
 </div>
 </section>
-<section class="summary-section" aria-labelledby="summaryTitle">
+<section aria-labelledby="summaryTitle" class="summary-section">
 <div class="container">
 <div class="summary-card reveal spotlight-card">
 <div class="summary-label">
@@ -1209,11 +1207,8 @@ I am an Electronics and Communication Engineering undergraduate building my skil
 </div>
 </div>
 </section>
-
 </main>
 <button aria-label="Reset signal and return to Home" id="backToTop" title="Reset signal — return to Home" type="button"><span class="reset-label">RST</span><span aria-hidden="true" class="reset-arrow">↑</span></button>
-
-
 <footer>
 <div class="container footer-inner"><span class="footer-copy">© 2026 Chavali Uddipa Dattudu. All rights reserved.</span><span class="footer-updated"><span id="footerUpdatedText"></span><span aria-hidden="true" class="footer-caret"></span></span></div>
 </footer>
