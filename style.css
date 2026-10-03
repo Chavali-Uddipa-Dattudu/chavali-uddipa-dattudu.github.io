@@ -1676,6 +1676,66 @@ html[data-theme="dark"] .achievement-card:hover {
 }
 
 /* Credentials */
+.credential-card-new {
+  position: relative;
+}
+.credential-new-tag {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 6;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 8px 5px 7px;
+  border: 1px solid color-mix(in srgb, var(--accent) 72%, transparent);
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 8.5px;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  line-height: 1;
+  box-shadow: 0 7px 18px rgba(199, 154, 59, 0.24);
+  animation: credentialNewBlink 1.7s ease-in-out infinite;
+}
+.credential-new-tag::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  flex: 0 0 5px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.55);
+  animation: credentialNewDot 1.7s ease-in-out infinite;
+}
+@keyframes credentialNewBlink {
+  0%,
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 0.52;
+    transform: translateY(-1px);
+  }
+}
+@keyframes credentialNewDot {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.45);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .credential-new-tag,
+  .credential-new-tag::before {
+    animation: none;
+  }
+}
 .credential-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
