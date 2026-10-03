@@ -10,6 +10,131 @@
     ...scope.querySelectorAll(selector),
   ];
 
+
+  /* ---------------------------------------------------------
+     Portfolio analytics foundation
+     GA4 + Clarity context, campaign attribution and safe helpers
+  --------------------------------------------------------- */
+  const ANALYTICS_VERSION = "2026-10-03-v2";
+  const ATTRIBUTION_STORAGE_KEY = "portfolioAnalyticsAttribution";
+
+  const storageGetJson = (key) => {
+    try {
+      const raw = sessionStorage.getItem(key);
+      return raw ? JSON.parse(raw) : null;
+    } catch {
+      return null;
+    }
+  };
+
+  const storageSetJson = (key, value) => {
+    try {
+      sessionStorage.setItem(key, JSON.stringify(value));
+    } catch {
+      /* Analytics remains functional even when storage is unavailable. */
+    }
+  };
+
+  const captureAttribution = () => {
+    const url = new URL(window.location.href);
+    const existing = storageGetJson(ATTRIBUTION_STORAGE_KEY);
+    if (existing && typeof existing === "object") return existing;
+
+    const keys = [
+      "utm_source",
+      "utm_medium",
+      "utm_campaign",
+      "utm_term",
+      "utm_content",
+    ];
+    const campaign = {};
+
+    keys.forEach((key) => {
+      const value = url.searchParams.get(key);
+      if (value) campaign[key] = value.slice(0, 120);
+    });
+
+    const referrerHost = (() => {
+      if (!document.referrer) return "direct";
+      try {
+        return new URL(document.referrer).hostname.slice(0, 120);
+      } catch {
+        return "referrer_unknown";
+      }
+    })();
+
+    const hasCampaignSource = Boolean(campaign.utm_source);
+    const trafficSource =
+      campaign.utm_source || (referrerHost === "direct" ? "direct" : referrerHost);
+    const trafficMedium =
+      campaign.utm_medium || (referrerHost === "direct" ? "direct" : "referral");
+
+    const context = {
+      ...campaign,
+      traffic_source: trafficSource.slice(0, 120),
+      traffic_medium: trafficMedium.slice(0, 120),
+      attribution_type: hasCampaignSource
+        ? "utm"
+        : referrerHost === "direct"
+          ? "direct"
+          : "referral",
+      landing_path: url.pathname.slice(0, 200) || "/",
+      referrer_host: referrerHost,
+    };
+
+    storageSetJson(ATTRIBUTION_STORAGE_KEY, context);
+    return context;
+  };
+
+  const analyticsAttribution = captureAttribution();
+
+  const claritySet = (key, value) => {
+    if (typeof window.clarity !== "function") return;
+    if (value === undefined || value === null || value === "") return;
+    window.clarity("set", key, String(value).slice(0, 255));
+  };
+
+  const clarityEvent = (eventName) => {
+    if (typeof window.clarity !== "function") return;
+    window.clarity("event", String(eventName).slice(0, 255));
+  };
+
+  const baseAnalyticsContext = () => ({
+    analytics_version: ANALYTICS_VERSION,
+    page_path: window.location.pathname.slice(0, 200) || "/",
+    page_title: document.title.slice(0, 150),
+    ...analyticsAttribution,
+  });
+
+  const trackEvent = (eventName, parameters = {}) => {
+    if (typeof window.gtag !== "function") return;
+    window.gtag("event", eventName, {
+      ...baseAnalyticsContext(),
+      ...parameters,
+    });
+  };
+
+  const initAnalyticsContext = () => {
+    claritySet("portfolio_version", ANALYTICS_VERSION);
+    claritySet("page_path", window.location.pathname || "/");
+    claritySet("landing_path", analyticsAttribution.landing_path);
+    claritySet("referrer_host", analyticsAttribution.referrer_host);
+    claritySet("traffic_source", analyticsAttribution.traffic_source);
+    claritySet("traffic_medium", analyticsAttribution.traffic_medium);
+
+    [
+      "utm_source",
+      "utm_medium",
+      "utm_campaign",
+      "utm_term",
+      "utm_content",
+    ].forEach((key) => claritySet(key, analyticsAttribution[key]));
+
+    clarityEvent("portfolio_loaded");
+  };
+
+  initAnalyticsContext();
+
   /* ---------------------------------------------------------
      Theme / NOT gate
   --------------------------------------------------------- */
@@ -40,6 +165,7 @@
     setTimeout(() => themeToggle.classList.remove("switching"), 520);
 
     updateThemeUI();
+    trackEvent("theme_switch", { theme: next });
   });
 
   /* ---------------------------------------------------------
@@ -345,6 +471,12 @@
 
       if (!copied) copied = fallbackCopy(email);
 
+      trackEvent("copy_email", {
+        copy_status: copied ? "success" : "failed",
+        copy_location: getInteractionLocation(button),
+      });
+      clarityEvent(copied ? "copy_email_success" : "copy_email_failed");
+
       clearTimeout(button.__copyTimer);
       button.textContent = copied ? "✓ Copied" : "Copy failed";
       button.classList.toggle("is-copied", copied);
@@ -382,6 +514,100 @@
       }
     });
   });
+
+  /* ---------------------------------------------------------
+     Recruiter journey + content interaction analytics
+  --------------------------------------------------------- */
+  if ("IntersectionObserver" in window) {
+    const viewedSections = new Set();
+    const sectionObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const section = entry.target;
+          const id = section.id || "section";
+          if (viewedSections.has(id)) return;
+          viewedSections.add(id);
+          const heading = section.querySelector("h2")?.textContent.trim() || id;
+          trackEvent("section_view", {
+            section_id: id.slice(0, 80),
+            section_name: heading.slice(0, 120),
+          });
+          claritySet("last_section", id);
+          clarityEvent("section_view");
+          sectionObserver.unobserve(section);
+        });
+      },
+      { threshold: 0.28 },
+    );
+    sections.forEach((section) => sectionObserver.observe(section));
+  }
+
+  $$(".project-selector-option").forEach((option) => {
+    option.addEventListener("click", () => {
+      const filter = option.dataset.filter || "unknown";
+      const label = option.textContent.trim() || filter;
+      trackEvent("project_filter_select", {
+        filter_name: filter,
+        filter_label: label.slice(0, 80),
+      });
+      claritySet("project_filter", filter);
+      clarityEvent("project_filter_select");
+    });
+  });
+
+  document.addEventListener("click", (event) => {
+    const image = event.target.closest(".lightbox-img");
+    if (!image) return;
+
+    const projectCard = image.closest(".project-card");
+    const project = getProjectAnalyticsMeta(projectCard);
+    const achievementCard = image.closest(".achievement-card");
+    const figure = image.closest("figure");
+    const evidenceLabel =
+      figure?.querySelector("figcaption")?.textContent.trim() ||
+      image.getAttribute("alt")?.trim() ||
+      "Evidence image";
+
+    if (projectCard) {
+      trackEvent("view_evidence", {
+        project_name: project.project_name,
+        project_category: project.project_category,
+        evidence_label: evidenceLabel.slice(0, 120),
+      });
+      claritySet("project_name", project.project_name);
+      claritySet("evidence_label", evidenceLabel);
+      clarityEvent("evidence_view");
+    } else if (achievementCard) {
+      const achievementName =
+        achievementCard.querySelector("h3")?.textContent.trim() ||
+        "Achievement";
+      trackEvent("view_achievement_evidence", {
+        achievement_name: achievementName.slice(0, 150),
+        evidence_label: evidenceLabel.slice(0, 120),
+      });
+      claritySet("achievement_name", achievementName);
+      clarityEvent("achievement_evidence_view");
+    }
+  });
+
+  const scrollThresholds = [25, 50, 75, 90];
+  const reachedScrollThresholds = new Set();
+
+  const trackScrollDepth = () => {
+    const doc = document.documentElement;
+    const maxScroll = Math.max(1, doc.scrollHeight - window.innerHeight);
+    const percent = Math.min(100, Math.round((window.scrollY / maxScroll) * 100));
+
+    scrollThresholds.forEach((threshold) => {
+      if (percent < threshold || reachedScrollThresholds.has(threshold)) return;
+      reachedScrollThresholds.add(threshold);
+      trackEvent("scroll_depth", { percent_scrolled: threshold });
+      clarityEvent(`scroll_${threshold}`);
+    });
+  };
+
+  window.addEventListener("scroll", trackScrollDepth, { passive: true });
 
   /* ---------------------------------------------------------
      Achievement + project detail modal
@@ -524,6 +750,45 @@
     });
   };
 
+  const getProjectAnalyticsMeta = (card) => {
+    const title = card?.querySelector("h3")?.textContent.trim() || "Project";
+    const meta = card
+      ? [...card.querySelectorAll(".project-meta span")].map((el) =>
+          el.textContent.trim(),
+        )
+      : [];
+    const category = meta[0] || card?.dataset.category || "engineering";
+    const tool = meta[1] || "unspecified";
+    const projectId = title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "")
+      .slice(0, 80) || "project";
+    const status = card?.classList.contains("research-project-card")
+      ? "learning"
+      : card?.classList.contains("coming-soon-card")
+        ? "pipeline"
+        : "published";
+
+    return {
+      project_id: projectId,
+      project_name: title.slice(0, 150),
+      project_category: category.slice(0, 120),
+      project_domain: String(card?.dataset.category || "engineering").slice(0, 80),
+      project_tool: tool.slice(0, 120),
+      project_status: status,
+    };
+  };
+
+  const getInteractionLocation = (element) => {
+    if (!element) return "unknown";
+    if (element.closest(".project-card")) return "project";
+    if (element.closest("footer")) return "footer";
+    if (element.closest("#contact")) return "contact";
+    if (element.closest(".hero-actions, .hero")) return "hero";
+    return "other";
+  };
+
   const sanitizeDetailClone = (clone) => {
     clone.classList.remove(
       "reveal",
@@ -553,6 +818,20 @@
 
   const openDetailModal = (card) => {
     if (!detailModal || !detailModalContent || !card) return;
+    const projectMeta = getProjectAnalyticsMeta(card);
+    trackEvent("view_project_details", {
+      project_id: projectMeta.project_id,
+      project_name: projectMeta.project_name,
+      project_category: projectMeta.project_category,
+      project_domain: projectMeta.project_domain,
+      project_tool: projectMeta.project_tool,
+      project_status: projectMeta.project_status,
+      interaction_source: "project_card",
+    });
+    claritySet("project_name", projectMeta.project_name);
+    claritySet("project_category", projectMeta.project_category);
+    claritySet("project_tool", projectMeta.project_tool);
+    clarityEvent("project_details_view");
 
     const source = card.__detailTemplate || card;
     detailModal.__returnScrollY = window.scrollY || window.pageYOffset || 0;
@@ -717,6 +996,13 @@
   const openResumeViewer = (trigger) => {
     if (!resumeViewer || !resumeViewerFrame) return;
     lastResumeTrigger = trigger || null;
+    const location = getInteractionLocation(trigger);
+    trackEvent("view_resume", {
+      source: location,
+      resume_method: "in_browser_viewer",
+    });
+    claritySet("cta_location", location);
+    clarityEvent("resume_view");
     resumeViewerFrame.src = resumeSource;
     if (typeof resumeViewer.showModal === "function") {
       if (!resumeViewer.open) resumeViewer.showModal();
@@ -984,6 +1270,14 @@
     if (mainProjectOrAchievement && !insideDetailModal) return;
 
     event.preventDefault();
+
+    if (trigger.matches(".credential-image, .certificate-view")) {
+      const certificateName =
+        trigger.dataset?.lightboxAlt ||
+        trigger.querySelector("img")?.alt ||
+        "Certificate";
+      trackEvent("view_certificate", { certificate_name: certificateName });
+    }
 
     const src = getLightboxSource(trigger);
     const image = getTriggerImage(trigger);
@@ -1330,6 +1624,75 @@
     observer.observe(experienceTimeline);
   }
 
+
+  /* ---------------------------------------------------------
+     Hero CTA analytics
+  --------------------------------------------------------- */
+  $$(".hero-actions a").forEach((link) => {
+    link.addEventListener("click", () => {
+      const label = link.textContent.trim() || "CTA";
+      const href = link.getAttribute("href") || "";
+      trackEvent("cta_click", {
+        cta_name: label.slice(0, 100),
+        cta_target: href.startsWith("#") ? href.slice(0, 80) : "external",
+        cta_location: "hero",
+      });
+      claritySet("cta_name", label);
+      claritySet("cta_location", "hero");
+      clarityEvent("cta_click");
+    });
+  });
+
+  /* ---------------------------------------------------------
+     Outbound/contact/resume link tracking
+  --------------------------------------------------------- */
+  document.addEventListener("click", (event) => {
+    const link = event.target.closest("a[href]");
+    if (!link) return;
+
+    const href = link.getAttribute("href") || "";
+    const location = getInteractionLocation(link);
+    const projectCard = link.closest(".project-card");
+    const project = projectCard ? getProjectAnalyticsMeta(projectCard) : null;
+
+    if (link.matches(".repo-link") || /github\.com\//i.test(href)) {
+      trackEvent("view_github", {
+        project_id: project?.project_id || "profile",
+        project_name: project?.project_name || "GitHub profile",
+        project_category: project?.project_category || "profile",
+        project_domain: project?.project_domain || "profile",
+        project_tool: project?.project_tool || "GitHub",
+        link_location: location,
+      });
+      claritySet("cta_location", location);
+      claritySet("project_name", project?.project_name || "GitHub profile");
+      clarityEvent("github_click");
+    } else if (/linkedin\.com\//i.test(href)) {
+      trackEvent("view_linkedin", {
+        link_location: location,
+      });
+      claritySet("cta_location", location);
+      clarityEvent("linkedin_click");
+    } else if (href.startsWith("mailto:")) {
+      trackEvent("contact_email", {
+        link_location: location,
+      });
+      claritySet("cta_location", location);
+      clarityEvent("email_click");
+    } else if (/wa\.me\//i.test(href)) {
+      trackEvent("contact_whatsapp", {
+        link_location: location,
+      });
+      claritySet("cta_location", location);
+      clarityEvent("whatsapp_click");
+    } else if (link.matches(".resume-open-tab, .resume-viewer-fallback a")) {
+      trackEvent("resume_open_external", {
+        source: "resume_viewer",
+      });
+      clarityEvent("resume_open_external");
+    }
+  });
+
   /* ---------------------------------------------------------
      Reset signal / back to top
   --------------------------------------------------------- */
@@ -1340,6 +1703,162 @@
     backToTop.classList.add("reset-active");
     setTimeout(() => backToTop.classList.remove("reset-active"), 650);
   });
+
+  /* ---------------------------------------------------------
+     Core Web Vitals + performance telemetry
+     Final field values for LCP, INP and CLS are sent once per page.
+  --------------------------------------------------------- */
+  (() => {
+    if (typeof PerformanceObserver === "undefined") return;
+
+    let lcpValue = null;
+    let inpValue = null;
+    let clsValue = 0;
+    let metricsSent = false;
+
+    const rating = (metric, value) => {
+      if (metric === "LCP") return value <= 2500 ? "good" : value <= 4000 ? "needs_improvement" : "poor";
+      if (metric === "INP") return value <= 200 ? "good" : value <= 500 ? "needs_improvement" : "poor";
+      if (metric === "CLS") return value <= 0.1 ? "good" : value <= 0.25 ? "needs_improvement" : "poor";
+      return "unknown";
+    };
+
+    const observe = (type, callback) => {
+      try {
+        if (PerformanceObserver.supportedEntryTypes?.includes(type)) {
+          const observer = new PerformanceObserver(callback);
+          observer.observe({ type, buffered: true });
+        }
+      } catch {
+        /* Unsupported performance entry types are skipped safely. */
+      }
+    };
+
+    observe("largest-contentful-paint", (list) => {
+      const entries = list.getEntries();
+      const last = entries[entries.length - 1];
+      if (last) lcpValue = last.startTime;
+    });
+
+    observe("layout-shift", (list) => {
+      list.getEntries().forEach((entry) => {
+        if (!entry.hadRecentInput) clsValue += entry.value;
+      });
+    });
+
+    observe("event", (list) => {
+      list.getEntries().forEach((entry) => {
+        if (entry.interactionId && entry.duration) {
+          inpValue = Math.max(inpValue || 0, entry.duration);
+        }
+      });
+    });
+
+    const sendVitals = (force = false) => {
+      if (metricsSent || (!force && document.visibilityState !== "hidden")) return;
+      metricsSent = true;
+
+      [
+        ["LCP", lcpValue, "ms"],
+        ["INP", inpValue, "ms"],
+        ["CLS", clsValue, "score"],
+      ].forEach(([metricName, value, unit]) => {
+        if (value === null || value === undefined) return;
+        trackEvent("web_vital", {
+          metric_name: metricName,
+          metric_value: Number(value.toFixed(metricName === "CLS" ? 4 : 1)),
+          metric_unit: unit,
+          metric_rating: rating(metricName, value),
+        });
+      });
+    };
+
+    document.addEventListener("visibilitychange", () => sendVitals(false));
+    window.addEventListener("pagehide", () => sendVitals(true), { once: true });
+
+    window.addEventListener(
+      "load",
+      () => {
+        setTimeout(() => {
+          const navigation = performance.getEntriesByType?.("navigation")?.[0];
+          if (!navigation) return;
+          trackEvent("page_performance", {
+            dom_content_loaded_ms: Math.round(navigation.domContentLoadedEventEnd || 0),
+            load_event_ms: Math.round(navigation.loadEventEnd || 0),
+            transfer_size_bytes: Math.round(navigation.transferSize || 0),
+          });
+        }, 0);
+      },
+      { once: true },
+    );
+  })();
+
+  /* ---------------------------------------------------------
+     JavaScript / resource error monitoring
+     No form values, raw error text, or URL query strings are sent.
+  --------------------------------------------------------- */
+  (() => {
+    let errorEventsSent = 0;
+    const MAX_ERROR_EVENTS_PER_PAGE = 5;
+
+    const sendError = (eventName, parameters = {}) => {
+      if (errorEventsSent >= MAX_ERROR_EVENTS_PER_PAGE) return;
+      errorEventsSent += 1;
+      trackEvent(eventName, parameters);
+    };
+
+    const safeResourceName = (source) => {
+      try {
+        const url = new URL(source || "", window.location.href);
+        const parts = url.pathname.split("/").filter(Boolean);
+        return (parts[parts.length - 1] || url.hostname || "unknown").slice(0, 100);
+      } catch {
+        return "unknown";
+      }
+    };
+
+    window.addEventListener(
+      "error",
+      (event) => {
+        const target = event.target;
+
+        if (target && target !== window && target.tagName) {
+          const tagName = String(target.tagName).toLowerCase();
+          const source = target.currentSrc || target.src || target.href || "";
+          sendError("resource_load_error", {
+            resource_type: tagName,
+            resource_name: safeResourceName(source),
+          });
+          clarityEvent("resource_load_error");
+          return;
+        }
+
+        let sourceFile = "inline";
+        try {
+          const url = new URL(event.filename || "", window.location.href);
+          const parts = url.pathname.split("/").filter(Boolean);
+          sourceFile = (parts[parts.length - 1] || "inline").slice(0, 100);
+        } catch {
+          /* Keep safe fallback. */
+        }
+
+        sendError("javascript_error", {
+          error_type: event.error?.name || "ErrorEvent",
+          source_file: sourceFile,
+        });
+        clarityEvent("javascript_error");
+      },
+      true,
+    );
+
+    window.addEventListener("unhandledrejection", (event) => {
+      const reason = event.reason;
+      sendError("unhandled_rejection", {
+        reason_type: reason instanceof Error ? reason.name : typeof reason,
+      });
+      clarityEvent("unhandled_rejection");
+    });
+  })();
 
   /* ---------------------------------------------------------
      Initial loader
@@ -1412,16 +1931,38 @@
     document.body.style.overflow = "";
   };
 
+  const GUIDE_SESSION_KEY = "portfolioQuickTourShown";
+
+  const guideWasShownThisSession = () => {
+    try {
+      return sessionStorage.getItem(GUIDE_SESSION_KEY) === "true";
+    } catch {
+      return false;
+    }
+  };
+
+  const markGuideShownThisSession = () => {
+    try {
+      sessionStorage.setItem(GUIDE_SESSION_KEY, "true");
+    } catch {
+      /* If storage is unavailable, the in-memory guard below still helps. */
+    }
+  };
+
+  let guideShownInThisPage = false;
+
   const showGuideOnce = () => {
-    if (!guide) return;
+    if (!guide || guideShownInThisPage || guideWasShownThisSession()) return;
+    guideShownInThisPage = true;
+    markGuideShownThisSession();
     guide.removeAttribute("hidden");
     guide.setAttribute("aria-hidden", "false");
     document.body.style.overflow = "hidden";
     setTimeout(() => guideStart?.focus(), 80);
   };
 
-  // Safety fallback: every fresh page load gets the quick-tour card,
-  // even if the loader's load timing changes.
+  // Safety fallback: if loader timing changes, the guide can still appear,
+  // but only once per browser session.
   setTimeout(() => {
     if (document.body.classList.contains("is-booting")) return;
     if (guide?.hasAttribute("hidden")) showGuideOnce();
@@ -1497,6 +2038,124 @@
 
   updateScrollProgress();
   window.addEventListener("scroll", updateScrollProgress, { passive: true });
+
+
+  /* ---------------------------------------------------------
+     Formspree contact form
+  --------------------------------------------------------- */
+  const contactForm = $("#contactForm");
+  const contactClear = $("#contactClear");
+  const contactFormStatus = $("#contactFormStatus");
+
+  const updateContactFormControls = () => {
+    if (!contactForm || !contactClear) return;
+    const hasUserInput = [...contactForm.elements].some((element) => {
+      if (!(element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement)) {
+        return false;
+      }
+      return element.type !== "hidden" && element.value.trim() !== "";
+    });
+    contactClear.hidden = !hasUserInput;
+  };
+
+  contactForm?.addEventListener("input", () => {
+    updateContactFormControls();
+    if (contactFormStatus) {
+      contactFormStatus.textContent = "";
+      contactFormStatus.className = "contact-form-status";
+    }
+  });
+
+  contactClear?.addEventListener("click", () => {
+    contactForm?.reset();
+    updateContactFormControls();
+    if (contactFormStatus) {
+      contactFormStatus.textContent = "";
+      contactFormStatus.className = "contact-form-status";
+    }
+    contactForm?.querySelector('input[name="name"]')?.focus();
+  });
+
+  contactForm?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    if (!contactForm) return;
+
+    const submitButton = contactForm.querySelector(".contact-submit");
+    const endpoint = contactForm.getAttribute("action");
+    const originalSubmitText = submitButton?.textContent || "Send Message ↗";
+
+    if (!endpoint) return;
+
+    if (submitButton) {
+      submitButton.disabled = true;
+      submitButton.textContent = "Sending…";
+    }
+
+    if (contactFormStatus) {
+      contactFormStatus.textContent = "";
+      contactFormStatus.className = "contact-form-status";
+    }
+
+    try {
+      const response = await fetch(endpoint, {
+        method: "POST",
+        body: new FormData(contactForm),
+        headers: {
+          Accept: "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        let message = "Unable to send your message. Please try again.";
+        try {
+          const data = await response.json();
+          if (data?.errors?.length) {
+            message = data.errors
+              .map((error) => error.message)
+              .filter(Boolean)
+              .join(" ") || message;
+          }
+        } catch {
+          /* Keep the generic fallback message. */
+        }
+        throw new Error(message);
+      }
+
+      trackEvent("contact_form_submit", {
+        form_location: "contact",
+        submission_status: "success",
+      });
+      clarityEvent("contact_form_success");
+
+      contactForm.reset();
+      updateContactFormControls();
+
+      if (contactFormStatus) {
+        contactFormStatus.textContent = "Message sent.";
+        contactFormStatus.className = "contact-form-status success";
+      }
+    } catch (error) {
+      trackEvent("contact_form_error", {
+        form_location: "contact",
+        error_type: "submission_failed",
+      });
+      clarityEvent("contact_form_error");
+      if (contactFormStatus) {
+        contactFormStatus.textContent =
+          error instanceof Error && error.message
+            ? error.message
+            : "Unable to send your message. Please try again.";
+        contactFormStatus.className = "contact-form-status error";
+      }
+    } finally {
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.textContent = originalSubmitText;
+      }
+    }
+  });
+
+  updateContactFormControls();
 
   /* ---------------------------------------------------------
      Private academic access

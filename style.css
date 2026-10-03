@@ -5571,3 +5571,64 @@ footer .footer-inner {
     padding-inline: 9px;
   }
 }
+
+
+/* ---------------------------------------------------------
+   Contact form actions, clear button, and status feedback
+--------------------------------------------------------- */
+.contact-form-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 2px;
+}
+.contact-form-actions .contact-submit {
+  margin-top: 0;
+}
+.contact-clear {
+  min-height: 42px;
+  cursor: pointer;
+}
+.contact-clear[hidden] {
+  display: none;
+}
+.contact-submit:disabled {
+  cursor: wait;
+  opacity: 0.72;
+  transform: none;
+}
+.contact-form-status {
+  min-height: 18px;
+  margin: 10px 0 0 !important;
+  color: var(--muted) !important;
+  font-size: 10.5px !important;
+  font-weight: 750;
+}
+.contact-form-status.success {
+  color: #2f6d45 !important;
+}
+.contact-form-status.error {
+  color: #a33a32 !important;
+}
+html[data-theme="dark"] .contact-form-status.success {
+  color: #8fd2a4 !important;
+}
+html[data-theme="dark"] .contact-form-status.error {
+  color: #ff9f96 !important;
+}
+.contact-form input::placeholder,
+.contact-form textarea::placeholder {
+  color: var(--muted);
+  opacity: 0.85;
+}
+
+@media (max-width: 640px) {
+  .contact-form-actions {
+    align-items: stretch;
+  }
+  .contact-form-actions .primary-btn,
+  .contact-form-actions .secondary-btn {
+    width: 100%;
+  }
+}

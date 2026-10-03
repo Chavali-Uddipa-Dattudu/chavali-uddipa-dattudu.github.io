@@ -49,7 +49,7 @@
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
     })(window, document, "clarity", "script", "yrrrv2jazm");
 </script>
-<link href="style.css?v=20261003-r5" rel="stylesheet"/>
+<link href="style.css?v=20261003-r6" rel="stylesheet"/>
 <link href="manifest.webmanifest" rel="manifest"/>
 <script type="application/ld+json">
 {
@@ -1173,7 +1173,7 @@ I am an Electronics and Communication Engineering undergraduate building my skil
       </a>
 <button aria-label="Copy email address" class="copy-email-btn" data-copy-email="chavaliuddipadattudu@gmail.com" type="button">Copy email</button>
 </div>
-<form class="contact-form" action="https://formspree.io/f/xnpneqdj" method="POST">
+<form class="contact-form" id="contactForm" action="https://formspree.io/f/xnpneqdj" method="POST">
   <input type="hidden" name="_subject" value="Portfolio contact — Chavali Uddipa Dattudu" />
   <div class="contact-form-grid">
     <label>
@@ -1182,7 +1182,7 @@ I am an Electronics and Communication Engineering undergraduate building my skil
     </label>
     <label>
       <span>Email</span>
-      <input type="email" name="email" autocomplete="email" required />
+      <input type="email" name="email" autocomplete="email" placeholder="xyz@gmail.com" required />
     </label>
   </div>
   <label>
@@ -1193,7 +1193,11 @@ I am an Electronics and Communication Engineering undergraduate building my skil
     <span>Message</span>
     <textarea name="message" rows="5" required placeholder="Tell me about the internship, research opportunity, or collaboration."></textarea>
   </label>
-  <button class="primary-btn contact-submit" type="submit">Send Message ↗</button>
+  <div class="contact-form-actions">
+    <button class="primary-btn contact-submit" type="submit">Send Message ↗</button>
+    <button class="secondary-btn contact-clear" id="contactClear" type="button" hidden>Clear Form</button>
+  </div>
+  <p class="contact-form-status" id="contactFormStatus" role="status" aria-live="polite"></p>
 </form>
 <p class="contact-form-note">This form sends your message through Formspree.</p>
 
@@ -1291,7 +1295,7 @@ I am an Electronics and Communication Engineering undergraduate building my skil
 <p class="lightbox-caption sr-only" id="lightboxCaption">
 </p>
 </dialog>
-<script defer="" src="script.js?v=20261003-r5">
+<script defer="" src="script.js?v=20261003-r7">
 </script>
 </body>
 </html>
