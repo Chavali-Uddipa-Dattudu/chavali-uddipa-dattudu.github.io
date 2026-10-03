@@ -693,6 +693,58 @@
   });
 
   /* ---------------------------------------------------------
+     In-browser PDF Resume Viewer
+  --------------------------------------------------------- */
+  const resumeViewer = $("#resumeViewer");
+  const resumeViewerFrame = $("#resumeViewerFrame");
+  const resumeViewerClose = $("#resumeViewerClose");
+  const resumeViewerTriggers = $$("[data-resume-viewer-open]");
+  const resumeSource = "resume.pdf";
+  let lastResumeTrigger = null;
+
+  const closeResumeViewer = () => {
+    if (!resumeViewer) return;
+    if (typeof resumeViewer.close === "function" && resumeViewer.open) {
+      resumeViewer.close();
+    }
+    resumeViewer.removeAttribute("open");
+    // Clear the iframe after closing so a fresh open always starts cleanly.
+    if (resumeViewerFrame) resumeViewerFrame.src = "about:blank";
+    document.body.style.overflow = "";
+    lastResumeTrigger?.focus({ preventScroll: true });
+  };
+
+  const openResumeViewer = (trigger) => {
+    if (!resumeViewer || !resumeViewerFrame) return;
+    lastResumeTrigger = trigger || null;
+    resumeViewerFrame.src = resumeSource;
+    if (typeof resumeViewer.showModal === "function") {
+      if (!resumeViewer.open) resumeViewer.showModal();
+    } else {
+      resumeViewer.setAttribute("open", "");
+    }
+    document.body.style.overflow = "hidden";
+    setTimeout(() => resumeViewerClose?.focus({ preventScroll: true }), 50);
+  };
+
+  resumeViewerTriggers.forEach((trigger) => {
+    trigger.addEventListener("click", () => openResumeViewer(trigger));
+  });
+
+  resumeViewerClose?.addEventListener("click", closeResumeViewer);
+  resumeViewer?.addEventListener("cancel", (event) => {
+    event.preventDefault();
+    closeResumeViewer();
+  });
+  resumeViewer?.addEventListener("click", (event) => {
+    if (event.target === resumeViewer) closeResumeViewer();
+  });
+  resumeViewer?.addEventListener("close", () => {
+    if (resumeViewerFrame) resumeViewerFrame.src = "about:blank";
+    document.body.style.overflow = "";
+  });
+
+  /* ---------------------------------------------------------
      Unified lightbox
   --------------------------------------------------------- */
   const lightbox = $("#lightbox");
@@ -1317,7 +1369,7 @@
   const footerUpdatedText = $("#footerUpdatedText");
 
   if (footerUpdatedText) {
-    const footerText = "Last Updated 30th September 2026";
+    const footerText = "Last Updated 3rd October 2026";
 
     if (reducedMotion) {
       footerUpdatedText.textContent = footerText;

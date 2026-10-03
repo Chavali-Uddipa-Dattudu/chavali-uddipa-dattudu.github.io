@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
 
 <html lang="en">
 <head>
@@ -42,7 +41,15 @@
 
   gtag('config', 'G-L27QXPHX4L');
 </script>
-<link href="style.css?v=20260930-r4" rel="stylesheet"/>
+<!-- Microsoft Clarity -->
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "yrrrv2jazm");
+</script>
+<link href="style.css?v=20261003-r5" rel="stylesheet"/>
 <link href="manifest.webmanifest" rel="manifest"/>
 <script type="application/ld+json">
 {
@@ -180,9 +187,9 @@
 <a class="secondary-btn" href="#contact">
         Hire / Collaborate ↗
        </a>
-<a class="secondary-btn" href="resume.pdf" rel="noopener noreferrer" target="_blank">
+<button class="secondary-btn resume-view-btn" type="button" data-resume-viewer-open>
         View CV ↗
-       </a>
+       </button>
 </div>
 <div aria-label="Connect with me" class="quick-links">
 <span class="quick-label">
@@ -1166,6 +1173,30 @@ I am an Electronics and Communication Engineering undergraduate building my skil
       </a>
 <button aria-label="Copy email address" class="copy-email-btn" data-copy-email="chavaliuddipadattudu@gmail.com" type="button">Copy email</button>
 </div>
+<form class="contact-form" action="https://formspree.io/f/xnpneqdj" method="POST">
+  <input type="hidden" name="_subject" value="Portfolio contact — Chavali Uddipa Dattudu" />
+  <div class="contact-form-grid">
+    <label>
+      <span>Name</span>
+      <input type="text" name="name" autocomplete="name" required />
+    </label>
+    <label>
+      <span>Email</span>
+      <input type="email" name="email" autocomplete="email" required />
+    </label>
+  </div>
+  <label>
+    <span>Organization / Institution <small>(optional)</small></span>
+    <input type="text" name="organization" autocomplete="organization" />
+  </label>
+  <label>
+    <span>Message</span>
+    <textarea name="message" rows="5" required placeholder="Tell me about the internship, research opportunity, or collaboration."></textarea>
+  </label>
+  <button class="primary-btn contact-submit" type="submit">Send Message ↗</button>
+</form>
+<p class="contact-form-note">This form sends your message through Formspree.</p>
+
 <div aria-label="Contact and professional profiles" class="contact-socials">
 <a aria-label="Email" class="social-icon-link" href="mailto:chavaliuddipadattudu@gmail.com" title="Email">
 <svg aria-hidden="true" class="social-icon" viewbox="0 0 24 24">
@@ -1202,7 +1233,7 @@ I am an Electronics and Communication Engineering undergraduate building my skil
 <span class="sr-only">
          GitHub
         </span>
-</a><a class="footer-cv-link" href="resume.pdf" rel="noopener noreferrer" target="_blank" title="View CV">View CV ↗</a>
+</a><button class="footer-cv-link resume-view-btn" type="button" data-resume-viewer-open title="View CV">View CV ↗</button>
 </div>
 </div>
 </div>
@@ -1212,6 +1243,27 @@ I am an Electronics and Communication Engineering undergraduate building my skil
 <footer>
 <div class="container footer-inner"><span class="footer-copy">© 2026 Chavali Uddipa Dattudu. All rights reserved.</span><span class="footer-updated"><span id="footerUpdatedText"></span><span aria-hidden="true" class="footer-caret"></span></span></div>
 </footer>
+
+<dialog aria-label="Resume viewer" aria-labelledby="resumeViewerTitle" class="resume-viewer" id="resumeViewer" role="dialog">
+  <div class="resume-viewer-panel">
+    <div class="resume-viewer-header">
+      <div>
+        <p class="eyebrow">DOCUMENT</p>
+        <h2 id="resumeViewerTitle">Resume / CV</h2>
+      </div>
+      <div class="resume-viewer-actions">
+        <a class="resume-open-tab" href="resume.pdf" target="_blank" rel="noopener noreferrer">Open in new tab ↗</a>
+        <button aria-label="Close resume viewer" class="resume-viewer-close" id="resumeViewerClose" type="button">×</button>
+      </div>
+    </div>
+    <div class="resume-viewer-frame-wrap">
+      <iframe id="resumeViewerFrame" title="Chavali Uddipa Dattudu Resume" src="about:blank"></iframe>
+    </div>
+    <p class="resume-viewer-fallback">
+      PDF preview uses your browser's built-in viewer. <a href="resume.pdf" target="_blank" rel="noopener noreferrer">Open the PDF directly ↗</a>
+    </p>
+  </div>
+</dialog>
 <dialog aria-label="Image viewer" aria-labelledby="lightboxCaption" class="lightbox" id="lightbox" role="dialog">
 <button aria-label="Close image" autofocus="true" class="lightbox-close" id="lightboxClose" type="button">
     ✕
@@ -1239,7 +1291,7 @@ I am an Electronics and Communication Engineering undergraduate building my skil
 <p class="lightbox-caption sr-only" id="lightboxCaption">
 </p>
 </dialog>
-<script defer="" src="script.js?v=20260928-r1">
+<script defer="" src="script.js?v=20261003-r5">
 </script>
 </body>
 </html>
