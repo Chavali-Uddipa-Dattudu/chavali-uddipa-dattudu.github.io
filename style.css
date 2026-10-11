@@ -6143,3 +6143,103 @@ html[data-theme="dark"] .learning-report-link {
   margin-top: auto;
   padding-top: 12px;
 }
+
+
+/* Portfolio refinement — Oct 11, 2026: hero actions, snapshot and contact starters */
+.hero-highlight-link {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  min-height: 43px;
+  padding: 7px 14px 6px;
+  text-align: center;
+  animation: heroActionPulse 2.8s ease-in-out infinite;
+  will-change: box-shadow;
+}
+.hero-highlight-link > span {
+  display: block;
+  line-height: 1.25;
+}
+.hero-highlight-link > small {
+  display: block;
+  font-size: 8px;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: .035em;
+  opacity: .86;
+}
+.hero-highlight-primary > small { color: rgba(255, 255, 255, .92); }
+.hero-achievement-links .hero-highlight-link:nth-child(2) { animation-delay: .45s; }
+@keyframes heroActionPulse {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 0%, transparent); }
+  50% { box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 14%, transparent); }
+}
+.snapshot-highlight-card .snapshot-value { color: var(--accent-strong); }
+.snapshot-highlight-card {
+  min-height: 108px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.quick-message-starters {
+  margin: -2px 0 15px;
+  padding: 12px 13px 11px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--surface-2) 62%, transparent);
+}
+.quick-message-heading {
+  margin: 0 0 9px !important;
+  color: var(--text-soft) !important;
+  font-size: 10.5px !important;
+  font-weight: 800;
+}
+.quick-message-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+.quick-message-chip {
+  padding: 7px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface-solid);
+  color: var(--text-soft);
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1.25;
+  transition: border-color .18s ease, background .18s ease, color .18s ease, transform .18s ease;
+}
+.quick-message-chip:hover,
+.quick-message-chip:focus-visible {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--text);
+  transform: translateY(-1px);
+}
+.quick-message-chip.is-selected {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+}
+.quick-message-status {
+  min-height: 14px;
+  margin: 7px 0 0 !important;
+  color: var(--muted) !important;
+  font-size: 9.5px !important;
+}
+@media (max-width: 640px) {
+  .hero-highlight-link { min-height: 42px; padding: 7px 11px 6px; }
+  .hero-highlight-link > span { font-size: 9.5px; }
+  .hero-highlight-link > small { font-size: 7.5px; }
+  .snapshot-highlight-card { min-height: 94px; }
+  .quick-message-options { gap: 6px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-highlight-link { animation: none !important; will-change: auto; }
+  .quick-message-chip { transition: none; }
+}

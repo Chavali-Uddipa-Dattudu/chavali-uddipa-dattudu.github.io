@@ -124,7 +124,7 @@
       CUD
      </span>
 </a>
-<nav aria-label="Primary navigation" class="nav-menu" id="primary-nav"><a class="active" href="#home">Home</a><a href="#about">About</a><a href="#experience">Experience</a><a href="#projects">Projects</a><a href="#education">Education</a><a href="#achievements">Achievements</a><a href="#learning">Technical Exposure</a><a href="#credentials">Credentials</a><a href="#contact">Contact</a></nav>
+<nav aria-label="Primary navigation" class="nav-menu" id="primary-nav"><a class="active" href="#home">Home</a><a href="#about">About</a><a href="#experience">Experience</a><a href="#projects">Projects</a><a href="#education">Education</a><a href="#achievements">Achievements</a><a href="#credentials">Credentials</a><a href="#learning">Technical Exposure</a><a href="#contact">Contact</a></nav>
 <button aria-label="Switch to dark theme" class="theme-toggle" id="themeToggle" title="Switch light and dark theme" type="button">
 <svg aria-hidden="true" class="not-gate-icon" viewbox="0 0 36 24">
 <path class="not-gate-line" d="M2 12H9"></path>
@@ -181,9 +181,9 @@
   </div>
   <h2 class="hero-achievement-title">Our team COREX won 1st prize at Silicon Sprint Hackathon 2026</h2>
   <p>Working with STM32 ADC and PWM speed-control code helped me understand how bare-metal firmware connects microcontroller registers with physical hardware. MAC 2026 added industry perspectives on VLSI, semiconductors and emerging AI workflows.</p>
-  <div class="hero-achievement-links">
-    <button class="hero-highlight-link hero-highlight-primary" type="button" data-open-achievement="silicon-sprint-achievement">View winning achievement ↗</button>
-    <button class="hero-highlight-link" type="button" data-open-achievement="mac2026-achievement">Explore MAC 2026 ↗</button>
+  <div class="hero-achievement-links" aria-label="Explore recent milestones">
+    <button class="hero-highlight-link hero-highlight-primary" type="button" data-open-achievement="silicon-sprint-achievement"><span>View winning achievement ↗</span><small>Click here</small></button>
+    <button class="hero-highlight-link" type="button" data-open-achievement="mac2026-achievement"><span>Explore MAC 2026 ↗</span><small>Click here</small></button>
   </div>
 </div>
 <div class="hero-actions">
@@ -272,6 +272,18 @@
 <span>
         Analog IC + RFIC research
        </span>
+</article>
+<article class="snapshot-card reveal spotlight-card snapshot-highlight-card">
+<strong class="snapshot-value" aria-label="Two first-prize hackathon wins">2×</strong>
+<span>Hackathon First-Prize Winner</span>
+</article>
+<article class="snapshot-card reveal spotlight-card snapshot-highlight-card">
+<strong class="snapshot-value snapshot-text">Upskilling</strong>
+<span>RFIC, analog IC design &amp; EDA automation</span>
+</article>
+<article class="snapshot-card reveal spotlight-card snapshot-highlight-card">
+<strong class="snapshot-value snapshot-text">MAC 2026</strong>
+<span>Semiconductor industry exposure</span>
 </article>
 </div>
 </div>
@@ -1298,8 +1310,18 @@ I am an Electronics and Communication Engineering undergraduate building my skil
   </label>
   <label>
     <span>Message</span>
-    <textarea name="message" rows="5" required placeholder="Tell me about the internship, research opportunity, or collaboration."></textarea>
+    <textarea id="contactMessage" name="message" rows="5" required placeholder="Tell me about the internship, research opportunity, or collaboration."></textarea>
   </label>
+  <div class="quick-message-starters" role="group" aria-label="Quick message starters">
+    <p class="quick-message-heading">Need a starting point? Choose a message idea.</p>
+    <div class="quick-message-options">
+      <button type="button" class="quick-message-chip" data-message-template="internship" aria-pressed="false">Internship opportunity</button>
+      <button type="button" class="quick-message-chip" data-message-template="research" aria-pressed="false">Research collaboration</button>
+      <button type="button" class="quick-message-chip" data-message-template="technical" aria-pressed="false">Technical discussion</button>
+      <button type="button" class="quick-message-chip" data-message-template="feedback" aria-pressed="false">Project / portfolio feedback</button>
+    </div>
+    <p class="quick-message-status" id="quickMessageStatus" aria-live="polite"></p>
+  </div>
   <div class="contact-form-actions">
     <button class="primary-btn contact-submit" type="submit">Send Message ↗</button>
     <button class="secondary-btn contact-clear" id="contactClear" type="button" hidden>Clear Form</button>

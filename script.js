@@ -2212,6 +2212,35 @@
   const contactForm = $("#contactForm");
   const contactClear = $("#contactClear");
   const contactFormStatus = $("#contactFormStatus");
+  const contactMessage = $("#contactMessage");
+  const quickMessageStatus = $("#quickMessageStatus");
+  const messageTemplates = {
+    internship: "Hello Uddipa, I am reaching out about a potential internship opportunity in [VLSI / RFIC / embedded systems]. I would be glad to discuss the role and how my project and research experience may fit.",
+    research: "Hello Uddipa, I would like to discuss a possible research collaboration related to [research area]. Your work in circuit design and EDA automation caught my attention. Would you be available for a brief discussion?",
+    technical: "Hello Uddipa, I have a technical question / discussion about [project or topic] from your portfolio. Could we connect to discuss it further?",
+    feedback: "Hello Uddipa, I reviewed your portfolio and would like to share some feedback / discuss one of your projects. Please let me know if you are open to a short conversation."
+  };
+
+  $$("[data-message-template]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const key = button.dataset.messageTemplate || "";
+      const template = messageTemplates[key];
+      if (!template || !contactMessage) return;
+
+      const current = contactMessage.value.trim();
+      if (current && !window.confirm("Replace the current message with this starter?")) return;
+      contactMessage.value = template;
+
+      $$("[data-message-template]").forEach((item) => {
+        item.classList.toggle("is-selected", item === button);
+        item.setAttribute("aria-pressed", String(item === button));
+      });
+      if (quickMessageStatus) quickMessageStatus.textContent = "Starter added. Edit the details before sending.";
+      contactMessage.focus();
+      contactMessage.setSelectionRange(contactMessage.value.length, contactMessage.value.length);
+      contactMessage.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+  });
 
   const updateContactFormControls = () => {
     if (!contactForm || !contactClear) return;
