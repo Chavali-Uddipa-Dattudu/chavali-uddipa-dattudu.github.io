@@ -843,7 +843,8 @@
         return {
           src: image.getAttribute("src") || "",
           alt: image.getAttribute("alt") || "Portfolio evidence",
-          caption: figure?.querySelector("figcaption")?.textContent.trim() ||
+          caption: image.getAttribute("data-gallery-caption") ||
+            figure?.querySelector("figcaption")?.textContent.trim() ||
             image.getAttribute("alt") || "Evidence image",
         };
       })
