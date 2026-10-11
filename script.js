@@ -372,7 +372,7 @@
     });
     achievementToggle.setAttribute("aria-expanded", String(!expanded));
     achievementToggle.textContent = expanded
-      ? "View more achievements ↓"
+      ? "Show all achievements ↓"
       : "Show fewer ↑";
   });
 
@@ -816,26 +816,183 @@
     return clone;
   };
 
+  const prepareDetailGallery = (clone) => {
+    if (!clone) return;
+
+    const isProject = clone.classList.contains("project-card");
+    let sourceContainer = null;
+    let sourceImages = [];
+
+    if (isProject) {
+      sourceContainer = clone.querySelector(".project-gallery");
+      sourceImages = sourceContainer ? [...sourceContainer.querySelectorAll("img")] : [];
+    } else if (clone.classList.contains("achievement-card")) {
+      sourceContainer = [...clone.children].find((child) =>
+        child.classList?.contains("achievement-evidence-grid"),
+      ) || [...clone.children].find((child) => child.tagName === "IMG");
+      if (sourceContainer) {
+        sourceImages = sourceContainer.tagName === "IMG"
+          ? [sourceContainer]
+          : [...sourceContainer.querySelectorAll("img")];
+      }
+    }
+
+    const images = sourceImages
+      .map((image) => {
+        const figure = image.closest("figure");
+        return {
+          src: image.getAttribute("src") || "",
+          alt: image.getAttribute("alt") || "Portfolio evidence",
+          caption: figure?.querySelector("figcaption")?.textContent.trim() ||
+            image.getAttribute("alt") || "Evidence image",
+        };
+      })
+      .filter((item) => item.src);
+
+    if (!sourceContainer || !images.length) return;
+
+    const title = clone.querySelector("h3")?.textContent.trim() || "Image gallery";
+    const gallery = document.createElement("section");
+    gallery.className = "detail-gallery-carousel";
+    gallery.setAttribute("role", "group");
+    gallery.setAttribute("aria-label", `${title} image gallery`);
+
+    const viewport = document.createElement("div");
+    viewport.className = "detail-gallery-viewport";
+
+    const image = document.createElement("img");
+    image.className = "detail-gallery-image lightbox-img";
+    image.alt = "";
+    image.decoding = "async";
+    image.loading = "eager";
+    image.draggable = false;
+
+    const previous = document.createElement("button");
+    previous.type = "button";
+    previous.className = "detail-gallery-arrow detail-gallery-prev";
+    previous.setAttribute("aria-label", "Show previous image");
+    previous.textContent = "‹";
+
+    const next = document.createElement("button");
+    next.type = "button";
+    next.className = "detail-gallery-arrow detail-gallery-next";
+    next.setAttribute("aria-label", "Show next image");
+    next.textContent = "›";
+
+    const footer = document.createElement("div");
+    footer.className = "detail-gallery-footer";
+    const caption = document.createElement("p");
+    caption.className = "detail-gallery-caption";
+    caption.setAttribute("aria-live", "polite");
+    const count = document.createElement("span");
+    count.className = "detail-gallery-count";
+    count.setAttribute("aria-label", "Image position");
+    footer.append(caption, count);
+    viewport.append(previous, image, next);
+    gallery.append(viewport, footer);
+
+    let currentIndex = 0;
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let suppressImageClick = false;
+
+    const render = () => {
+      if (!images.length) {
+        image.removeAttribute("src");
+        image.alt = "No gallery images are available.";
+        caption.textContent = "Gallery images are not available.";
+        count.textContent = "";
+        previous.hidden = true;
+        next.hidden = true;
+        return;
+      }
+
+      currentIndex = (currentIndex + images.length) % images.length;
+      const item = images[currentIndex];
+      image.onerror = () => {
+        image.onerror = null;
+        images.splice(currentIndex, 1);
+        if (!images.length) {
+          render();
+          return;
+        }
+        if (currentIndex >= images.length) currentIndex = images.length - 1;
+        render();
+      };
+      image.src = item.src;
+      image.alt = item.alt;
+      caption.textContent = item.caption;
+      count.textContent = images.length > 1 ? `${currentIndex + 1} / ${images.length}` : "1 / 1";
+      const hasMultiple = images.length > 1;
+      previous.hidden = !hasMultiple;
+      next.hidden = !hasMultiple;
+      count.hidden = !hasMultiple;
+      gallery.classList.toggle("is-single-image", !hasMultiple);
+    };
+
+    const move = (step) => {
+      if (images.length < 2) return;
+      currentIndex = (currentIndex + step + images.length) % images.length;
+      render();
+    };
+
+    previous.addEventListener("click", () => move(-1));
+    next.addEventListener("click", () => move(1));
+    viewport.addEventListener("touchstart", (event) => {
+      if (!event.touches?.length) return;
+      touchStartX = event.touches[0].clientX;
+      touchStartY = event.touches[0].clientY;
+    }, { passive: true });
+    viewport.addEventListener("touchend", (event) => {
+      if (!event.changedTouches?.length) return;
+      const deltaX = event.changedTouches[0].clientX - touchStartX;
+      const deltaY = event.changedTouches[0].clientY - touchStartY;
+      if (Math.abs(deltaX) < 42 || Math.abs(deltaX) < Math.abs(deltaY) * 1.2) return;
+      suppressImageClick = true;
+      move(deltaX < 0 ? 1 : -1);
+      window.setTimeout(() => { suppressImageClick = false; }, 350);
+    }, { passive: true });
+    gallery.addEventListener("click", (event) => {
+      if (!suppressImageClick) return;
+      event.preventDefault();
+      event.stopPropagation();
+    }, true);
+
+    sourceContainer.replaceWith(gallery);
+    render();
+  };
+
   const openDetailModal = (card) => {
     if (!detailModal || !detailModalContent || !card) return;
-    const projectMeta = getProjectAnalyticsMeta(card);
-    trackEvent("view_project_details", {
-      project_id: projectMeta.project_id,
-      project_name: projectMeta.project_name,
-      project_category: projectMeta.project_category,
-      project_domain: projectMeta.project_domain,
-      project_tool: projectMeta.project_tool,
-      project_status: projectMeta.project_status,
-      interaction_source: "project_card",
-    });
-    claritySet("project_name", projectMeta.project_name);
-    claritySet("project_category", projectMeta.project_category);
-    claritySet("project_tool", projectMeta.project_tool);
-    clarityEvent("project_details_view");
+    if (card.classList.contains("project-card")) {
+      const projectMeta = getProjectAnalyticsMeta(card);
+      trackEvent("view_project_details", {
+        project_id: projectMeta.project_id,
+        project_name: projectMeta.project_name,
+        project_category: projectMeta.project_category,
+        project_domain: projectMeta.project_domain,
+        project_tool: projectMeta.project_tool,
+        project_status: projectMeta.project_status,
+        interaction_source: "project_card",
+      });
+      claritySet("project_name", projectMeta.project_name);
+      claritySet("project_category", projectMeta.project_category);
+      claritySet("project_tool", projectMeta.project_tool);
+      clarityEvent("project_details_view");
+    } else {
+      const achievementName = card.querySelector("h3")?.textContent.trim() || "Achievement";
+      trackEvent("view_achievement_details", {
+        achievement_name: achievementName.slice(0, 150),
+        interaction_source: "achievement_card",
+      });
+      claritySet("achievement_name", achievementName);
+      clarityEvent("achievement_details_view");
+    }
 
     const source = card.__detailTemplate || card;
     detailModal.__returnScrollY = window.scrollY || window.pageYOffset || 0;
     const clone = sanitizeDetailClone(source.cloneNode(true));
+    prepareDetailGallery(clone);
     detailModalContent.replaceChildren(clone);
 
     const detailSignalBase = $("#detailSignalPath", detailModal);
@@ -912,6 +1069,14 @@
   );
 
   document.addEventListener("click", (event) => {
+    const achievementShortcut = event.target.closest("[data-open-achievement]");
+    if (achievementShortcut) {
+      event.preventDefault();
+      const targetCard = document.getElementById(achievementShortcut.dataset.openAchievement || "");
+      if (targetCard) openDetailModal(targetCard);
+      return;
+    }
+
     const readMore = event.target.closest(".achievement-readmore");
     if (readMore) {
       const card = readMore.closest(".achievement-card");
@@ -1888,7 +2053,7 @@
   const footerUpdatedText = $("#footerUpdatedText");
 
   if (footerUpdatedText) {
-    const footerText = "Last Updated 3rd October 2026";
+    const footerText = "Last Updated 11th October 2026";
 
     if (reducedMotion) {
       footerUpdatedText.textContent = footerText;
