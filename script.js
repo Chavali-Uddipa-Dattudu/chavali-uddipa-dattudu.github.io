@@ -687,7 +687,7 @@
     const dialog = document.createElement("dialog");
     dialog.className = "detail-modal";
     dialog.id = "detailModal";
-    dialog.setAttribute("aria-label", "Detailed project or achievement view");
+    dialog.setAttribute("aria-label", "Detailed portfolio item view");
     dialog.innerHTML = `
       <div class="detail-modal-panel">
         <button class="detail-modal-close" id="detailModalClose" type="button" aria-label="Close details">×</button>
@@ -711,6 +711,9 @@
   });
   const detailModalContent = document.getElementById("detailModalContent");
   const detailModalClose = document.getElementById("detailModalClose");
+  $$(".mentor-card").forEach((card) => {
+    card.__detailTemplate = card.cloneNode(true);
+  });
 
   const compactAchievementCards = () => {
     $$(".achievement-card").forEach((card) => {
@@ -965,7 +968,15 @@
 
   const openDetailModal = (card) => {
     if (!detailModal || !detailModalContent || !card) return;
-    if (card.classList.contains("project-card")) {
+    if (card.classList.contains("mentor-card")) {
+      const mentorName = card.querySelector("h3")?.textContent.trim() || "Mentor";
+      trackEvent("view_mentor_recommendation", {
+        mentor_name: mentorName.slice(0, 150),
+        interaction_source: "mentor_recommendation_card",
+      });
+      claritySet("mentor_name", mentorName);
+      clarityEvent("mentor_recommendation_view");
+    } else if (card.classList.contains("project-card")) {
       const projectMeta = getProjectAnalyticsMeta(card);
       trackEvent("view_project_details", {
         project_id: projectMeta.project_id,
@@ -1085,6 +1096,17 @@
         event.preventDefault();
         event.stopPropagation();
         openDetailModal(card);
+      }
+      return;
+    }
+
+    const mentorReadMore = event.target.closest(".mentor-readmore");
+    if (mentorReadMore) {
+      const mentorCard = mentorReadMore.closest(".mentor-card");
+      if (mentorCard) {
+        event.preventDefault();
+        event.stopPropagation();
+        openDetailModal(mentorCard);
       }
       return;
     }
@@ -2054,7 +2076,7 @@
   const footerUpdatedText = $("#footerUpdatedText");
 
   if (footerUpdatedText) {
-    const footerText = "Last Updated 11th October 2026";
+    const footerText = "Last Updated 12th November 2026";
 
     if (reducedMotion) {
       footerUpdatedText.textContent = footerText;
